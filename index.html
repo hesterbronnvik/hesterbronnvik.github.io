@@ -5,13 +5,14 @@
   <title>Hester Bronnvik – Researcher</title>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
   <style>
-   body {
+    body {
   font-family: 'EB Garamond', serif; /* Default font */
   background-color: #F8F9F2; /* Light gray background */
   color: #000000; /* Dark text for contrast */
+  margin: 0;
+  padding: 0;
 }
 
-/* Center content container */
 .container {
   max-width: 1200px; /* Max width for the content */
   width: 100%;
@@ -25,14 +26,15 @@ header {
   color: white; /* White text in the header */
   padding: 20px 0;
 }
-    /* Navigation */
-    nav ul {
-      list-style-type: none; /* Remove bullet points */
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      gap: 2em; /* Space between links */
-    }
+
+/* Navigation */
+nav ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2em; /* Space between links */
+}
 
 nav a {
   color: #fff; /* White links */
@@ -45,67 +47,55 @@ nav a:hover {
   color: #3a5a40;
 }
 
-footer {
-  background-color: #333; /* Dark footer */
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-
-footer a {
-  color: #f4f4f4; /* Light footer links */
-}
-footer a:hover {
-  color: #fff;
-}
-
-/* Narrowing the About section text */
+/* Full Width Sections */
 section {
-      min-height: 100vh; /* Full screen height */
-      display: flex;
-      margin-top: 2em;
-      text-align: left;
-      width: 100%; /* Control the width */
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 15px; /* Optional: adds some space around the content */
-    }
-    section:nth-of-type(even) {
-      background-color: #FFFFED; /* Alternating background for visual variety */
-    }
+  min-height: 100vh; /* Full screen height */
+  width: 100%; /* Make section as wide as the screen */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0; /* Remove any margin */
+}
 
+section:nth-of-type(even) {
+  background-color: #FFFFED; /* Alternating background for visual variety */
+}
+
+/* Publications Section Layout */
 .publications-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive 3-column layout */
-      gap: 20px; /* Space between items */
-      margin-top: 2em;
-    }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive 3-column layout */
+  gap: 20px; /* Space between publication items */
+  margin-top: 2em;
+}
 
-    .publication-item {
-      text-align: center;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 8px;
-      background-color: #f9f9f9;
-    }
+.publication-item {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
 
-    .publication-thumbnail {
-      width: 100%;
-      max-width: 200px; /* Adjust size of thumbnail */
-      height: auto;
-      border-radius: 8px;
-    }
+.publication-thumbnail {
+  width: 100%;
+  max-width: 200px; /* Adjust size of thumbnail */
+  height: auto;
+  border-radius: 8px;
+}
 
-    .publication-title {
-      font-weight: bold;
-      margin-top: 10px;
-    }
+.publication-title {
+  font-weight: bold;
+  margin-top: 10px;
+}
 
-    .publication-status {
-      color: #888;
-      margin-top: 5px;
-    }
-    
+.publication-status {
+  color: #888;
+  margin-top: 5px;
+}
+
 /* Container to hold the image and text side-by-side */
 .image-text-container {
   display: flex;
@@ -113,6 +103,7 @@ section {
   gap: 20px; /* Space between image and text */
   margin: 1em 0; /* Optional: space above and below the container */
 }
+
 /* Ensure the paragraphs are stacked vertically */
 .image-text-container .text-container {
   display: block; /* Ensure paragraphs behave as block elements */
@@ -122,22 +113,25 @@ section {
 .image-text-container p {
   margin-bottom: 1em; /* Add some spacing between paragraphs */
 }
+
 /* The image below is centered and made circular */
-    img.headshot {
-      display: block;
-      max-width: 400px;
-      max-height: 400px;
-      margin: 1em auto;
-      border-radius: 50%;
-    }
+img.headshot {
+  display: block;
+  max-width: 400px;
+  max-height: 400px;
+  margin: 1em auto;
+  border-radius: 50%;
+}
+
 /* For other images (i.e., non-headshots), maintain original aspect ratio */
 img.image {
   display: block;
   max-width: 400px;
   max-height: 400px;
-  height: auto;    /* Preserve aspect ratio */
+  height: auto; /* Preserve aspect ratio */
   margin: 1em auto; /* Center the image if needed */
 }
+
 /* Style for links */
 a {
   color: #3a5a40; /* Set link color to a dark green */
@@ -151,7 +145,6 @@ a:hover {
 }
 
   </style>
- <!-- All the content now the styling is complete -->
 </head>
 <body>
 
@@ -161,7 +154,6 @@ a:hover {
     <nav>
       <ul>
         <li><a href="#about">About</a></li>
-        <!-- <li><a href="#research">Research</a></li>-->
         <li><a href="#publications">Publications</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#news">News</a></li>
@@ -169,90 +161,52 @@ a:hover {
     </nav>
   </header>
 
-<div class="container">
-  <section id="about">
-    <div class="image-text-container">
-    <img src="headshot.jpg" alt="Hester Bronnvik" class="headshot">
-      <div class="text-container">
-      <p>Research insight</p>
-    <p>I am interested in how, given internal state, external environment, and current goals, animals use and move through their multi-layered environments to balance their individual costs and benefits. I am particularly focused on fitness effects through mortality and reproductive success. </p>
-        </div>
-    </div>
-  </section>
-
-  
-  <section id="profile">
-    <div class="image-text-container">
-    <img src="IMG_8068.jpeg" alt="chamounix" class="image">
-      <div class="text-container">
-    <p>If there is one optimal state for a living organism—one best form or best behavior—why do we observe great variation among individuals?</p>
-    <p>Traditionally, behavioral ecology has answered this question by invoking environmental variation. For example, we can expect parents holding different territories to raise different numbers of offspring based on food availability.</p>
-    <p>In my doctoral research, I expand on this by examining variation within individuals—the change in optimal behavior with age. I have focused on long-distance migration as a model behavior.</p>
+  <div class="container">
+    <section id="about">
+      <div class="image-text-container">
+        <img src="headshot.jpg" alt="Hester Bronnvik" class="headshot">
         <div class="text-container">
-    </div>
-  </section>
-  
-  <!--  <section id="research">
-    <h3>Research Themes</h3>
-    <ul>
-      <li>Theme 1</li>
-      <li>Theme 2</li>
-      <li>Theme 3</li>
-    </ul>
-  </section>-->
+          <p>Research insight</p>
+          <p>I am interested in how animals use and move through their multi-layered environments...</p>
+        </div>
+      </div>
+    </section>
 
-<section id="publications">
-  <h3>Selected Publications</h3>
-  <div class="publications-container">
-    <!-- Publication 1 -->
-    <div class="publication-item">
-      <img src="thumbnail1.jpg" alt="Publication 1" class="publication-thumbnail">
-      <p class="publication-title">Experience and motivation shape the flight performance of white storks migrating long distance</p>
-      <p class="publication-status"><a href="10.1016/j.cub.2025.06.044" target="_blank"><i>Current Biology</i></a></p>
-    </div>
+    <section id="publications">
+      <h3>Selected Publications</h3>
+      <div class="publications-container">
+        <!-- Publication 1 -->
+        <div class="publication-item">
+          <img src="thumbnail1.jpg" alt="Publication 1" class="publication-thumbnail">
+          <p class="publication-title">Experience and motivation shape the flight performance of white storks migrating long distance</p>
+          <p class="publication-status"><a href="10.1016/j.cub.2025.06.044" target="_blank"><i>Current Biology</i></a></p>
+        </div>
 
-    <!-- Publication 2 -->
-    <div class="publication-item">
-      <img src="thumbnail2.jpg" alt="Publication 2" class="publication-thumbnail">
-      <p class="publication-title">Experience reduces route selection for conspecifics by the collectively migrating white stork</p>
-      <p class="publication-status"><a href="10.1016/j.cub.2024.03.052" target="_blank"><i>Current Biology</i></a></p>
-    </div>
+        <!-- Publication 2 -->
+        <div class="publication-item">
+          <img src="thumbnail2.jpg" alt="Publication 2" class="publication-thumbnail">
+          <p class="publication-title">Experience reduces route selection for conspecifics by the collectively migrating white stork</p>
+          <p class="publication-status"><a href="10.1016/j.cub.2024.03.052" target="_blank"><i>Current Biology</i></a></p>
+        </div>
 
-    <!-- Publication 3 -->
-    <div class="publication-item">
-      <img src="thumbnail3.png" alt="Publication 3" class="publication-thumbnail">
-      <p class="publication-title">Experience does not change the importance of wind support for migratory route selection by a soaring bird</p>
-      <p class="publication-status"><a href="https://doi.org/10.1098/rsos.220746" target="_blank"><i>Royal Society Open Science</i></a></p>
-    </div>
+        <!-- Publication 3 -->
+        <div class="publication-item">
+          <img src="thumbnail3.png" alt="Publication 3" class="publication-thumbnail">
+          <p class="publication-title">Experience does not change the importance of wind support for migratory route selection by a soaring bird</p>
+          <p class="publication-status"><a href="https://doi.org/10.1098/rsos.220746" target="_blank"><i>Royal Society Open Science</i></a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h3>Contact Me</h3>
+      <p>Email: hbronnvik@ab.mpg.de</p>
+    </section>
+
+    <footer>
+      © 2025 Hester Bronnvik
+    </footer>
+
   </div>
-</section>
-
-         <!--  
-  <section id="publications">
-    <h3>Recent publications</h3>
-    <ul>
-      <li><a href="10.1016/j.cub.2025.06.044" target="_blank">Experience and motivation shape the flight performance of white storks migrating long-distance</a></li>
-      <li><a href="10.1016/j.cub.2024.03.052" target="_blank">Experience reduces route selection for conspecifics by the collectively migrating white stork</a></li>
-      <li><a href="https://doi.org/10.1098/rsos.220746" target="_blank">Experience does not change the importance of wind support for migratory route selection by a soaring bird</a></li>
-    </ul>
-  </section>-->
-
-  <section id="contact">
-    <h3>Contact Me</h3>
-    <p>Email: hbronnvik@ab.mpg.de</p>
-  </section>
-
-  <section id="news">
-    <h3>News</h3>
-    <ul>
-      <li>Submitted the dissertation.</li>
-    </ul>
-  </section>
- </div>
-      
-  <footer>
-    © 2025 Hester Bronnvik
-  </footer>
-
 </body>
 </html>
