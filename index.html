@@ -131,23 +131,26 @@ section:nth-of-type(odd) {
 .publication-link:hover {
   background-color: #f0f0f0; /* Optional: subtle hover effect */
 }
-.extra-links {
-  text-align: center;           /* center the text */
-  margin-top: 1.5em;            /* space above this text */
-/*   font-size: 1.1rem;            /* optional: slightly larger */ */
-  color: #000;
-}
 
 .extra-links a {
-  color: #3a5a40;
+  display: inline-block;          /* So padding works like a button */
+  padding: 0.5em 1.2em;           /* Vertical and horizontal padding */
+  margin: 0 0.5em;                /* Space between buttons */
+  background-color: #3a5a40;      /* Dark green background */
+  color: white;                   /* White text */
+  border-radius: 20px;            /* Rounded corners */
   text-decoration: none;
+  font-weight: 600;               /* Slightly bolder text */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover */
 }
 
 .extra-links a:hover {
-  color: #5a8e6d;
-  text-decoration: underline;
+  background-color: #5a8e6d;      /* Lighter green on hover */
+  color: white;
+  text-decoration: none;          /* Remove underline on hover */
 }
 
+    
 /* Container to hold the image and text side-by-side */
 .image-text-container {
   display: flex;
