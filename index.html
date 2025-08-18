@@ -64,14 +64,23 @@ section:nth-of-type(odd) {
   background-color: #F8F9F2;
 }
 
+.section-title {
+  font-size: 3rem;   /* or whatever size you want */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5em;
+  color: #3a5a40;
+  position: relative;
+}
+
 .section-title::after {
   content: "";
   display: block;
   width: 60px;
   height: 4px;
-/*   background-color: #3a5a40; */
+  background-color: #3a5a40;  /* uncomment this for the underline bar */
   margin: 10px auto 0;
-  font-size: 10em;
+  /* No font-size needed here */
 }
     
 /* Publications Section Layout */
@@ -134,8 +143,8 @@ section:nth-of-type(odd) {
 }
 
 .image-text-container img {
-  width: 600px;
-  height: 800px;
+  width: 400px;
+  height: 533px;
   object-fit: cover;     /* Crop and fill the area */
 /*   border-radius: 8px;    /* Optional: slight rounding */ */
   flex-shrink: 0;        /* Prevent shrinking in flex layout */
