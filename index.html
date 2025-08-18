@@ -63,8 +63,41 @@ section {
       padding: 0 15px; /* Optional: adds some space around the content */
     }
     section:nth-of-type(even) {
-      background-color: #f0f0f0; /* Alternating background for visual variety */
+      background-color: #FFFFED; /* Alternating background for visual variety */
     }
+
+.publications-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive 3-column layout */
+      gap: 20px; /* Space between items */
+      margin-top: 2em;
+    }
+
+    .publication-item {
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+
+    .publication-thumbnail {
+      width: 100%;
+      max-width: 200px; /* Adjust size of thumbnail */
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .publication-title {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .publication-status {
+      color: #888;
+      margin-top: 5px;
+    }
+    
 /* Container to hold the image and text side-by-side */
 .image-text-container {
   display: flex;
