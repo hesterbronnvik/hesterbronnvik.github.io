@@ -48,16 +48,29 @@ nav a:hover {
 }
 
 /* Full Width Sections */
-section {
-  min-height: 90vh; /* Take up most of the screen */
-  padding: 60px 0;   /* Space inside each section (top and bottom) */
+/* section {
+  min-height: 90vh; 
+  padding: 60px 0;   
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   z-index: 1;
-}
+}  */
+section {
+  /* Remove these lines */
+  /* width: 100vw;
+     left: 50%;
+     right: 50%;
+     margin-left: -50vw;
+     margin-right: -50vw; */
 
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+    
 section:nth-of-type(even) {
   background-color: #FFFFED;
 }
