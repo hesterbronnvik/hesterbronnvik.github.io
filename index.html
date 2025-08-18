@@ -128,6 +128,22 @@ section:nth-of-type(odd) {
 .publication-link:hover {
   background-color: #f0f0f0; /* Optional: subtle hover effect */
 }
+.extra-links {
+  text-align: center;           /* center the text */
+  margin-top: 1.5em;            /* space above this text */
+  font-size: 1.1rem;            /* optional: slightly larger */
+  color: #3a5a40;
+}
+
+.extra-links a {
+  color: #3a5a40;
+  text-decoration: none;
+}
+
+.extra-links a:hover {
+  color: #5a8e6d;
+  text-decoration: underline;
+}
 
 /* Container to hold the image and text side-by-side */
 .image-text-container {
@@ -282,9 +298,11 @@ a:hover {
             </a>
         </div>
       </div>
-      <nav margin-top: 1.5em text-align: center class="inline-nav">
-          For a full list of publications, see my <a href="https://orcid.org/0000-0002-3061-0630">ORCID record</a> or <a href="https://scholar.google.com/citations?user=_kSyig0AAAAJ&hl=en&oi=ao">GoogleScholar page</a>.
-        </nav>
+      <nav class="extra-links">
+  For a full list of publications, see my 
+  <a href="https://orcid.org/0000-0002-3061-0630">ORCID record</a> or 
+  <a href="https://scholar.google.com/citations?user=_kSyig0AAAAJ&hl=en&oi=ao">GoogleScholar page</a>.
+</nav>
     </section>
 
     <section id="contact">
