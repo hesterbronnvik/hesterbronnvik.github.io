@@ -49,24 +49,27 @@ nav a:hover {
 
 /* Full Width Sections */
 section {
-  min-height: 100vh; /* Full screen height */
-  width: 100%; /* Make section as wide as the screen */
+  min-height: 100vh;
+  width: 100vw;        /* Full viewport width */
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: 0; /* Remove any margin */
 }
 
 section:nth-of-type(even) {
-  background-color: #FFFFED; /* Alternating background for visual variety */
+  background-color: #FFFFED; /* Full-bleed background */
 }
 
 /* Publications Section Layout */
 .publications-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive 3-column layout */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive 3-column layout */
   gap: 20px; /* Space between publication items */
   margin-top: 2em;
 }
@@ -164,7 +167,7 @@ a:hover {
   <div class="container">
     <section id="about">
       <div class="image-text-container">
-        <img src="headshot.jpg" alt="Hester Bronnvik" class="headshot">
+        <img src="headshot.jpg" alt="Hester Bronnvik" class="image">
         <div class="text-container">
           <p>Research insight</p>
           <p>I am interested in how, given internal state, external environment, and current goals, animals use and move through their multi-layered environments to balance their individual costs and benefits. I am particularly focused on fitness effects through mortality and reproductive success. </p>
