@@ -17,6 +17,14 @@ header {
   color: white; /* White text in the header */
   padding: 20px 0;
 }
+    /* Navigation */
+    nav ul {
+      list-style-type: none; /* Remove bullet points */
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 2em; /* Space between links */
+    }
 
 nav a {
   color: #fff; /* White links */
@@ -45,12 +53,17 @@ footer a:hover {
 
 /* Narrowing the About section text */
 section {
+      min-height: 100vh; /* Full screen height */
+      display: flex;
       margin-top: 2em;
       text-align: left;
       max-width: 800px; /* Control the width */
       margin-left: auto;
       margin-right: auto;
       padding: 0 15px; /* Optional: adds some space around the content */
+    }
+    section:nth-of-type(even) {
+      background-color: #f0f0f0; /* Alternating background for visual variety */
     }
 /* Container to hold the image and text side-by-side */
 .image-text-container {
