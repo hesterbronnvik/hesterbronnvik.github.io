@@ -111,6 +111,8 @@ section:nth-of-type(even) {
 /* Ensure the paragraphs are stacked vertically */
 .image-text-container .text-container {
   display: block; /* Ensure paragraphs behave as block elements */
+  max-width: 600px; /* Optional: limit the width of text to avoid too wide columns */
+  min-width: 0;     /* Allow this flex child to shrink if necessary */
   overflow-wrap: break-word;    /* Standard way to allow wrapping */
   word-wrap: break-word;        /* Legacy alias */
   word-break: break-word;       /* Break long words if needed */
