@@ -111,7 +111,10 @@ section:nth-of-type(even) {
 /* Ensure the paragraphs are stacked vertically */
 .image-text-container .text-container {
   display: block; /* Ensure paragraphs behave as block elements */
-  max-width: 600px; /* Optional: limit the width of text to avoid too wide columns */
+  overflow-wrap: break-word;    /* Standard way to allow wrapping */
+  word-wrap: break-word;        /* Legacy alias */
+  word-break: break-word;       /* Break long words if needed */
+  hyphens: auto;                /* Add hyphens when words break (if supported) */
 }
 
 .image-text-container p {
@@ -170,7 +173,7 @@ a:hover {
       <div class="image-text-container">
         <img src="headshot.jpg" alt="Hester Bronnvik" class="image">
         <div class="text-container">
-          <p>Research insight</p>
+          <p><i>Research insight</i></p>
           <p>I am interested in how, given internal state, external environment, and current goals, animals use and move through their multi-layered environments to balance their individual costs and benefits. I am particularly focused on fitness effects through mortality and reproductive success. </p>
         </div>
       </div>
@@ -181,7 +184,6 @@ a:hover {
       <div class="image-text-container">
         <img src="IMG_8068.jpeg" alt="Hester Bronnvik" class="image">
         <div class="text-container">
-          <p>Research insight</p>
 <p>If there is one optimal state for a living organism—one best form or best behavior—why do we observe great variation among individuals?</p> 
           <p>Traditionally, behavioral ecology has answered this question by invoking environmental variation. For example, we can expect parents holding different territories to raise different numbers of offspring based on food availability.</p> 
           <p>In my doctoral research, I expand on this by examining variation within individuals—the change in optimal behavior with age. I have focused on long-distance migration as a model behavior.</p>        
