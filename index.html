@@ -49,20 +49,21 @@ nav a:hover {
 
 /* Full Width Sections */
 section {
-  /* width: 100vw;
-     left: 50%;
-     right: 50%;
-     margin-left: -50vw;
-     margin-right: -50vw; */
-
-  padding: 20px;
+  min-height: 90vh; /* Take up most of the screen */
+  padding: 60px 0;   /* Space inside each section (top and bottom) */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 section:nth-of-type(even) {
-  background-color: #FFFFED; /* Full-bleed background */
+  background-color: #FFFFED;
+}
+
+section:nth-of-type(odd) {
+  background-color: #F8F9F2;
 }
 
 /* Publications Section Layout */
