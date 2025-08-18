@@ -325,7 +325,24 @@ h1.animate-in, h2.animate-in, h3.animate-in, h4.animate-in, h5.animate-in, h6.an
     </footer>
   </div>
 
-<script src="scroll-animate.js"></script>
-  
+<!-- <script src="scroll-animate.js"></script> -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const titles = document.querySelectorAll('.section-title');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target); // Animate once only
+        }
+      });
+    }, { threshold: 0.1 });
+
+    titles.forEach(title => {
+      observer.observe(title);
+    });
+  });
+</script>  
 </body>
 </html>
