@@ -120,6 +120,15 @@ section:nth-of-type(odd) {
   color: #888;
   margin-top: 5px;
 }
+.publication-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.publication-link:hover {
+  background-color: #f0f0f0; /* Optional: subtle hover effect */
+}
 
 /* Container to hold the image and text side-by-side */
 .image-text-container {
@@ -241,12 +250,14 @@ a:hover {
       <h1>Selected Publications</h1>
       <div class="publications-container">
         <!-- Publication 1 -->
-        <div class="publication-item">
-          <img src="thumbnail1.jpg" alt="Publication 1" class="publication-thumbnail">
-          <p class="publication-title">Experience and motivation shape the flight performance of white storks migrating long distance</p>
-          <p class="publication-status"><a href="10.1016/j.cub.2025.06.044" target="_blank"><i>Current Biology</i></a></p>
+        <div class="publication-item"> 
+          <a href="https://doi.org/10.1016/j.cub.2025.06.044" target="_blank" class="publication-link">
+            <img src="thumbnail1.jpg" alt="Publication 1" class="publication-thumbnail">
+            <p class="publication-title">Experience and motivation shape the flight performance of white storks migrating long distance</p>
+            <p class="publication-status"><i>Current Biology</i></p>
+          </a>
         </div>
-
+        
         <!-- Publication 2 -->
         <div class="publication-item">
           <img src="thumbnail2.jpg" alt="Publication 2" class="publication-thumbnail">
