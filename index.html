@@ -52,7 +52,13 @@ section {
       margin-right: auto;
       padding: 0 15px; /* Optional: adds some space around the content */
     }
-    
+/* Container to hold the image and text side-by-side */
+.image-text-container {
+  display: flex;
+  align-items: center; /* Align text and image vertically in the center */
+  gap: 20px; /* Space between image and text */
+  margin: 1em 0; /* Optional: space above and below the container */
+}
 /* The image below is centered and made circular */
     img.headshot {
       display: block;
@@ -61,6 +67,13 @@ section {
       margin: 1em auto;
       border-radius: 50%;
     }
+/* For other images (i.e., non-headshots), maintain original aspect ratio */
+img.image {
+  display: block;
+  max-width: 100%; /* Keep image width responsive */
+  height: auto;    /* Preserve aspect ratio */
+  margin: 1em auto; /* Center the image if needed */
+}
 /* Style for links */
 a {
   color: #3a5a40; /* Set link color to a dark green */
@@ -93,16 +106,20 @@ a:hover {
   </header>
 
   <section id="about">
+    <div class="image-text-container">
     <img src="headshot.jpg" alt="Hester Bronnvik" class="headshot">
     <p>I am interested in how, given internal state, external environment, and current goals, animals use and move through their multi-layered environments to balance their individual costs and benefits. I am particularly focused on fitness effects through mortality and reproductive success. </p>
+    </div>
   </section>
 
   
   <section id="profile">
-    <img src="IMG_8068.jpeg" alt="chamounix" class="headshot">
+    <div class="image-text-container">
+    <img src="IMG_8068.jpeg" alt="chamounix" class="image">
     <p>If there is one optimal state for a living organism—one best form or best behavior—why do we observe great variation among individuals?</p>
     <p>Traditionally, behavioral ecology has answered this question by invoking environmental variation. For example, we can expect parents holding different territories to raise different numbers of offspring based on food availability.</p>
     <p>In my doctoral research, I expand on this by examining variation within individuals—the change in optimal behavior with age. I have focused on long-distance migration as a model behavior.</p>
+    </div>
   </section>
   
   <!--  <section id="research">
@@ -131,8 +148,7 @@ a:hover {
   <section id="news">
     <h3>News</h3>
     <ul>
-      <li>Recent paper accepted in Journal X</li>
-      <li>Presentation awarded at Conference Y</li>
+      <li>Submitted the dissertation.</li>
     </ul>
   </section>
 
