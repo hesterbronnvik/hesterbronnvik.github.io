@@ -59,18 +59,28 @@ section {
   gap: 20px; /* Space between image and text */
   margin: 1em 0; /* Optional: space above and below the container */
 }
+/* Ensure the paragraphs are stacked vertically */
+.image-text-container .text-container {
+  display: block; /* Ensure paragraphs behave as block elements */
+  max-width: 600px; /* Optional: limit the width of text to avoid too wide columns */
+}
+
+.image-text-container p {
+  margin-bottom: 1em; /* Add some spacing between paragraphs */
+}
 /* The image below is centered and made circular */
     img.headshot {
       display: block;
-      max-width: 200px;
-      max-height: 200px;
+      max-width: 400px;
+      max-height: 400px;
       margin: 1em auto;
       border-radius: 50%;
     }
 /* For other images (i.e., non-headshots), maintain original aspect ratio */
 img.image {
   display: block;
-  max-width: 100%; /* Keep image width responsive */
+  max-width: 400px;
+  max-height: 400px;
   height: auto;    /* Preserve aspect ratio */
   margin: 1em auto; /* Center the image if needed */
 }
@@ -94,15 +104,15 @@ a:hover {
   <header>
     <h1>Hester Bronnvik</h1>
     <h2>Site under construction</h2>
-    <!-- <nav>
+    <nav>
       <ul>
         <li><a href="#about">About</a></li>
-        <li><a href="#research">Research</a></li>
+        <!-- <li><a href="#research">Research</a></li>-->
         <li><a href="#publications">Publications</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a href="#news">News</a></li>
       </ul>
-    </nav>-->
+    </nav>
   </header>
 
   <section id="about">
