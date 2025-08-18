@@ -49,13 +49,12 @@ nav a:hover {
 
 /* Full Width Sections */
 section {
-  min-height: 100vh;
-  width: 100vw;        /* Full viewport width */
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  /* width: 100vw;
+     left: 50%;
+     right: 50%;
+     margin-left: -50vw;
+     margin-right: -50vw; */
+
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -109,19 +108,26 @@ section:nth-of-type(even) {
 }
 
 /* Ensure the paragraphs are stacked vertically */
-.image-text-container .text-container {
-  display: block; /* Ensure paragraphs behave as block elements */
-  max-width: 600px; /* Optional: limit the width of text to avoid too wide columns */
-  min-width: 0;     /* Allow this flex child to shrink if necessary */
-  overflow-wrap: break-word;    /* Standard way to allow wrapping */
-  word-wrap: break-word;        /* Legacy alias */
-  word-break: break-word;       /* Break long words if needed */
-  hyphens: auto;                /* Add hyphens when words break (if supported) */
+.image-text-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.image-text-container p {
-  margin-bottom: 1em; /* Add some spacing between paragraphs */
+.image-text-container img {
+  max-width: 300px;
+  height: auto;
+  flex-shrink: 0; /* Prevent shrinking */
 }
+
+.image-text-container .text-container {
+  flex: 1 1 0;
+  min-width: 250px;
+  max-width: 800px;
+  word-wrap: break-word;
+}
+
 
 /* The image below is centered and made circular */
 img.headshot {
@@ -170,14 +176,16 @@ a:hover {
     </nav>
   </header>
 
-  <div class="container">
+  
     <section id="about">
+      <div class="container">
       <div class="image-text-container">
         <img src="headshot.jpg" alt="Hester Bronnvik" class="image">
         <div class="text-container">
-          <p><i>Research insight</i></p>
+          <p style="margin-bottom:1cm;"><i>Research Insight</i></p>
           <p>I am interested in how, given internal state, external environment, and current goals, animals use and move through their multi-layered environments to balance their individual costs and benefits. I am particularly focused on fitness effects through mortality and reproductive success. </p>
         </div>
+       </div>
       </div>
     </section>
 
