@@ -40,14 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let biomeProgress = 0;
 
     // -----------------------
-    // GAME STATE
+    // STATE
     // -----------------------
-    const STATE = {
-        START: "start",
-        PLAYING: "playing",
-        GAMEOVER: "gameover"
-    };
-
+    const STATE = { START: "start", PLAYING: "playing", GAMEOVER: "gameover" };
     let gameState = STATE.START;
 
     let distance = 0;
@@ -61,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     let weather = "clear";
     let weatherTimer = 0;
-
     let lightningFlash = 0;
     let lightningTimer = 0;
 
@@ -86,18 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const speed = 0.06;
 
     // -----------------------
-    // REGION SYSTEM
+    // REGION
     // -----------------------
-    function getRegion(distanceKm) {
+    function getRegion(km) {
 
-        if (distanceKm < 150) return "you remained in Central Europe";
-        if (distanceKm < 300) return "you reached the Alps";
-        if (distanceKm < 800) return "you reached France";
-        if (distanceKm < 950) return "you reached the Pyrenees";
-        if (distanceKm < 1450) return "you reached Iberia!";
-        if (distanceKm < 1590) return "you Mediterranean Sea";
-        if (distanceKm < 2590) return "you reached North Africa!";
-        if (distanceKm < 3590) return "you reached the Sahel!";
+        if (km < 150) return "you remained in Central Europe";
+        if (km < 300) return "you reached the Alps";
+        if (km < 800) return "you reached France";
+        if (km < 950) return "you reached the Pyrenees";
+        if (km < 1450) return "you reached Iberia!";
+        if (km < 1590) return "you Mediterranean Sea";
+        if (km < 2590) return "you reached North Africa!";
+        if (km < 3590) return "you reached the Sahel!";
         return "Deep Migration Route";
     }
 
@@ -105,21 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // INPUT
     // -----------------------
     document.addEventListener("keydown", (e) => {
-
         if (e.code !== "Space" && e.code !== "ArrowUp") return;
         e.preventDefault();
 
-        if (gameState === STATE.START) {
-            gameState = STATE.PLAYING;
-            return;
-        }
-
-        if (gameState === STATE.GAMEOVER) {
-            restart();
-            return;
-        }
-
-        jump();
+        if (gameState === STATE.START) gameState = STATE.PLAYING;
+        else if (gameState === STATE.GAMEOVER) restart();
+        else jump();
     });
 
     function jump() {
@@ -133,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // OBSTACLES
     // -----------------------
     function createObstacle() {
-
         const type = Math.random() < 0.5 ? "powerline" : "storm";
 
         obstacles.push({
@@ -152,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // RESTART
     // -----------------------
     function restart() {
-
         gameState = STATE.PLAYING;
 
         distance = 0;
@@ -181,16 +164,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        const weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
+        cameraX += 6 * difficulty;
 
-        cameraX += 6 * difficulty * weatherSpeed;
-
-        // physics
+        // player physics
         player.velocityY += gravity;
         player.y += player.velocityY;
 
         const maxY = groundY - 90;
-
         if (player.y > maxY) {
             player.y = maxY;
             player.velocityY = 0;
@@ -201,27 +181,23 @@ document.addEventListener("DOMContentLoaded", () => {
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
 
-        // difficulty (smooth curve)
         difficulty = 1 + Math.pow(distance / 220, 1.15);
 
-        // biome progression
+        // biome
         biomeProgress += speed;
-
         if (biomeProgress > biomeRoute[biomeIndex].length) {
             biomeProgress = 0;
             biomeIndex = Math.min(biomeIndex + 1, biomeRoute.length - 1);
         }
 
-        // spawn obstacles
+        // obstacles
         obstacleTimer++;
-        const spawnRate = Math.max(45, 110 / difficulty);
-
-        if (obstacleTimer > spawnRate) {
+        if (obstacleTimer > Math.max(45, 110 / difficulty)) {
             createObstacle();
             obstacleTimer = 0;
         }
 
-        obstacles = obstacles.filter(o => (o.x - cameraX) < canvas.width + 300);
+        obstacles = obstacles.filter(o => o.x - cameraX < canvas.width + 300);
 
         // weather
         weatherTimer++;
@@ -234,14 +210,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // lightning
         if (weather === "storm") {
             lightningTimer++;
-            if (lightningTimer > 80 + Math.random() * 140) {
+            if (lightningTimer > 90 + Math.random() * 120) {
                 lightningFlash = 6;
                 lightningTimer = 0;
             }
         }
         if (lightningFlash > 0) lightningFlash--;
 
-        // fog target
+        // fog
         let targetFog = 0.08;
         if (weather === "cloudy") targetFog = 0.12;
         if (weather === "storm") targetFog = 0.18;
@@ -258,7 +234,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         for (let o of obstacles) {
-
             const h = o.hitbox || o;
 
             const ob = {
@@ -280,12 +255,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // BIOME DRAW
+    // BIOME DRAW (RESTORED VISUALS)
     // -----------------------
     function drawBiome(biome) {
 
-        let sky = "#F8F9F2";
+        const offset = cameraX * 0.2;
 
+        let sky = "#F8F9F2";
         if (biome === "farmland") sky = "#F2F7E6";
         if (biome === "mountains") sky = "#D6D3D1";
         if (biome === "sea") sky = "#A7D8FF";
@@ -293,6 +269,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 🌾 FARMLAND
+        if (biome === "farmland") {
+            ctx.fillStyle = "#9AC46A";
+            for (let i = -1; i < 20; i++) {
+                const x = (i * 40 - offset) % (canvas.width + 40);
+                ctx.fillRect(x, groundY + 10, 20, 60);
+            }
+        }
+
+        // ⛰ MOUNTAINS
+        if (biome === "mountains") {
+            ctx.fillStyle = "#8B8F97";
+            for (let i = 0; i < 6; i++) {
+                const x = (i * 200 - offset * 0.5) % (canvas.width + 200);
+                ctx.beginPath();
+                ctx.moveTo(x, groundY);
+                ctx.lineTo(x + 80, 140);
+                ctx.lineTo(x + 160, groundY);
+                ctx.fill();
+            }
+        }
+
+        // 🌊 SEA
+        if (biome === "sea") {
+            ctx.fillStyle = "#4DA3FF";
+            for (let i = 0; i < canvas.width; i += 25) {
+                const wave = Math.sin((i + cameraX) * 0.05) * 4;
+                ctx.fillRect(i, groundY - 30 + wave, 20, 10);
+            }
+        }
+
+        // 🏜 DESERT
+        if (biome === "desert") {
+            ctx.fillStyle = "#E7B66C";
+            for (let i = -2; i < 12; i++) {
+                const x = (i * 120 - offset * 0.3) % (canvas.width + 120);
+                ctx.beginPath();
+                ctx.arc(x, groundY + 10, 60, 0, Math.PI);
+                ctx.fill();
+            }
+        }
     }
 
     // -----------------------
@@ -301,31 +319,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function draw() {
 
         const biome = biomeRoute[biomeIndex].name;
-
         drawBiome(biome);
 
         // fog
         ctx.fillStyle = `rgba(255,255,255,${fogAlpha})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // lightning cinematic
+        // lightning
         if (lightningFlash > 0) {
-
             const i = lightningFlash / 6;
-
             ctx.fillStyle = `rgba(255,255,255,${0.9 * i})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = `rgba(0,0,0,${0.35 * i})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.globalCompositeOperation = "multiply";
-            ctx.fillStyle = `rgba(255,255,255,${0.4 * i})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = "source-over";
         }
 
-        // START SCREEN
         if (gameState === STATE.START) {
             ctx.fillStyle = "#000";
             ctx.font = "30px Arial";
@@ -333,9 +339,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // GAME OVER
         if (gameState === STATE.GAMEOVER) {
-
             const region = getRegion(distance);
 
             ctx.fillStyle = "rgba(0,0,0,0.5)";
@@ -343,21 +347,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ctx.fillStyle = "#fff";
             ctx.font = "36px Arial";
-
-            ctx.fillText(
-                Math.floor(distance) + " km, " + region,
-                120,
-                120
-            );
+            ctx.fillText(Math.floor(distance) + " km, " + region, 120, 120);
 
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
             return;
         }
 
+        // PLAYER
+        const flightBob = Math.sin(distance * 2) * 2;
+        const y = player.y + flightBob;
+
+        ctx.drawImage(storkImg, player.x, y, player.width, player.height);
+
+        if (lightningFlash > 0) {
+            ctx.fillStyle = "rgba(0,0,0,0.75)";
+            ctx.fillRect(player.x, y, player.width, player.height);
+        }
+
         // OBSTACLES
         for (let o of obstacles) {
-
             const x = o.x - cameraX;
 
             if (o.type === "powerline") {
@@ -367,23 +376,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // PLAYER (silhouette during lightning)
-        const flightBob = Math.sin(distance * 2) * 2;
-        const y = player.y + flightBob;
-
-        const isLightning = lightningFlash > 0;
-
-        ctx.drawImage(storkImg, player.x, y, player.width, player.height);
-
-        if (isLightning) {
-            ctx.fillStyle = "rgba(0,0,0,0.75)";
-            ctx.fillRect(player.x, y, player.width, player.height);
-        }
-
-        // UI
-        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        // BIOME LABEL
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.font = "16px Arial";
-        ctx.fillText(biome.toUpperCase(), 20, 60);
+        ctx.fillText(biome.toUpperCase(), 20, 50);
     }
 
     // -----------------------
