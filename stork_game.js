@@ -134,18 +134,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // RESTART
     // -----------------------
     function restart() {
-
         gameOver = false;
         distance = 0;
-
+    
         player.y = 170;
         player.velocityY = 0;
         player.jumping = false;
-
+    
         obstacles = [];
         obstacleTimer = 0;
-
-        gameLoop();
     }
 
     // -----------------------
@@ -305,22 +302,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // UI text
-        
-        if (!gameStarted) {
-        ctx.fillStyle = "#000";
-        ctx.font = "30px Arial";
-        ctx.fillText("Press SPACE to Start", 200, 120);
-        return;
-    }
-        
+                
         if (gameOver) {
+            ctx.fillStyle = "rgba(0,0,0,0.4)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+            ctx.fillStyle = "#fff";
             ctx.font = "40px Arial";
-            ctx.fillText("DEATH", 250, 120);
-
+            ctx.fillText("DEATH", 220, 120);
+        
             ctx.font = "20px Arial";
-            ctx.fillText("Press Space to Restart", 250, 160);
+            ctx.fillText("Press SPACE to Restart", 200, 160);
+            return;
         }
-    }
+
+        if (!gameStarted) {
+            ctx.fillStyle = "#000";
+            ctx.font = "30px Arial";
+            ctx.fillText("Press SPACE to Start", 200, 120);
+            return;
+        }
 
     // -----------------------
     // LOOP
