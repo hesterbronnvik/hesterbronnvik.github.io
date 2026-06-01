@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const storkImg = new Image();
     storkImg.src = "stork8bit.png";
 
-    const storkSilhouetteImg = new Image();
-    storkSilhouetteImg.src = "stork8bit_black.png";
+   // const storkSilhouetteImg = new Image();
+   //storkSilhouetteImg.src = "stork8bit_black.png";
 
     const powerlineImg = new Image();
     powerlineImg.src = "pylon8bit.png";
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let weatherTimer = 0;
     let lightningFlash = 0;
     let lightningTimer = 0;
+    let screenShake = 0;
 
     // -----------------------
     // ATMOSPHERE
@@ -224,6 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (lightningTimer > 90 + Math.random() * 120) {
                 lightningFlash = 6;
                 lightningTimer = 0;
+                screenShake = 6;
             }
         }
         if (lightningFlash > 0) lightningFlash--;
@@ -289,15 +291,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
         drawBiome(biome);
 
+        let stormDarken = 0;
+        
+        if (weather === "storm") stormDarken = 0.15;
+        if (weather === "cloudy") stormDarken = 0.05;
+        ctx.fillStyle = `rgba(0,0,0,${stormDarken})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         // FOG
         ctx.fillStyle = `rgba(255,255,255,${fogAlpha})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // LIGHTNING FLASH (global)
         if (lightningFlash > 0) {
-            const i = lightningFlash / 6;
-            ctx.fillStyle = `rgba(255,255,255,${0.85 * i})`;
+        
+            const intensity = lightningFlash / 6;
+        
+            // strong white flash overlay
+            ctx.fillStyle = `rgba(255,255,255,${0.85 * intensity})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+            // optional: slight blue tint (makes storms feel better)
+            ctx.fillStyle = `rgba(180,220,255,${0.25 * intensity})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // shaking effect
+            const shakeX = screenShake > 0 ? (Math.random() - 0.5) * 6 : 0;
+            const shakeY = screenShake > 0 ? (Math.random() - 0.5) * 6 : 0;
+
+            ctx.save();
+            ctx.translate(shakeX, shakeY);
         }
 
         if (gameState === STATE.START) {
@@ -330,9 +353,19 @@ if (gameState === STATE.GAMEOVER) {
 
 
         // PLAYER (silhouette swap)
-        //const flightBob = Math.sin(distance * 2) * 2;
-        //const y = player.y + flightBob;
+        const flightBob = Math.sin(distance * 2) * 2;
+        const y = player.y + flightBob;
 
+        // this is the normal stork
+        ctx.drawImage(
+            storkImg,
+            player.x,
+            y,
+            player.width,
+            player.height
+        );
+
+        // this is the lightning stork
         //const currentStork =
           //  lightningFlash > 0 ? storkSilhouetteImg : storkImg;
 
@@ -353,6 +386,8 @@ if (gameState === STATE.GAMEOVER) {
         ctx.fillStyle = "rgba(0,0,0,0.5)";
         ctx.font = "16px Arial";
         ctx.fillText(biome.toUpperCase(), 20, 50);
+
+        ctx.restore();
     }
 
     // -----------------------
