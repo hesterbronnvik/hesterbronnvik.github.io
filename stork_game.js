@@ -61,14 +61,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // =====================
     // OBSTACLES
     // =====================
-    function createObstacle() {
+   function createObstacle() {
+
+    const types = ["powerline", "storm"];
+    const type = types[Math.floor(Math.random() * types.length)];
+
+    if (type === "powerline") {
+
         obstacles.push({
+            type: "powerline",
             x: canvas.width,
-            y: 170,
-            width: 25,
-            height: 50
+            y: 180,
+            width: 60,
+            height: 10
+        });
+
+    } else if (type === "storm") {
+
+         let stormWidth = 90;
+         let stormHeight = 60;
+
+        obstacles.push({
+            type: "storm",
+            x: canvas.width,
+            y: Math.random() * 80 + 20, // floats in sky
+            width: 70,
+            height: 40
         });
     }
+}
 
     // =====================
     // RESTART
@@ -120,15 +141,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // COLLISION DETECTION (IMPORTANT PART)
         // =====================
         for (let o of obstacles) {
-            if (
-                player.x < o.x + o.width &&
-                player.x + player.width > o.x &&
-                player.y < o.y + o.height &&
-                player.y + player.height > o.y
-            ) {
-                gameOver = true;
-            }
-        }
+
+    if (
+        player.x < o.x + o.width &&
+        player.x + player.width > o.x &&
+        player.y < o.y + o.height &&
+        player.y + player.height > o.y
+    ) {
+        gameOver = true;
+    }
+}
 
         // score
         if (!gameOver) {
@@ -181,8 +203,43 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillStyle = "#B7C44B";
 
         for (let o of obstacles) {
-            ctx.fillRect(o.x, o.y, o.width, o.height);
-        }
+
+    if (o.type === "powerline") {
+
+        // pole line
+        ctx.strokeStyle = "#444";
+        ctx.beginPath();
+        ctx.moveTo(o.x, o.y);
+        ctx.lineTo(o.x + o.width, o.y);
+        ctx.stroke();
+
+        // small pole hint
+        ctx.beginPath();
+        ctx.moveTo(o.x + 10, o.y);
+        ctx.lineTo(o.x + 10, o.y + 30);
+        ctx.stroke();
+
+    }
+
+    if (o.type === "storm") {
+
+        // cloud shape
+        ctx.fillStyle = "rgba(120,120,120,0.8)";
+        ctx.beginPath();
+        ctx.arc(o.x + 20, o.y, 20, 0, Math.PI * 2);
+        ctx.arc(o.x + 45, o.y + 5, 25, 0, Math.PI * 2);
+        ctx.arc(o.x + 65, o.y, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        // lightning hint
+        ctx.strokeStyle = "yellow";
+        ctx.beginPath();
+        ctx.moveTo(o.x + 40, o.y + 10);
+        ctx.lineTo(o.x + 35, o.y + 35);
+        ctx.lineTo(o.x + 45, o.y + 35);
+        ctx.stroke();
+    }
+}
 
         // game over screen
         if (gameOver) {
