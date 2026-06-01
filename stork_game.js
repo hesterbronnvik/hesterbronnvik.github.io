@@ -98,19 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function loop() {
-        update(obstacles.forEach(o => {
-
-    if (
-        player.x < o.x + o.width &&
-        player.x + player.width > o.x &&
-        player.y < o.y + o.height &&
-        player.y + player.height > o.y
-    ) {
-        alert("Migration failed!");
-        location.reload();
-    }
-
-}););
+        update();
         draw();
         requestAnimationFrame(loop);
     }
