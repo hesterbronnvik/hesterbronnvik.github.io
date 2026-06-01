@@ -86,14 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function getRegion(distanceKm) {
 
-        if (distanceKm < 150) return "Central Europe";
-        if (distanceKm < 300) return "Alps";
-        if (distanceKm < 800) return "France";
-        if (distanceKm < 950) return "Pyrenees";
-        if (distanceKm < 1450) return "Iberia";
-        if (distanceKm < 1590) return "Mediterranean Sea";
-        if (distanceKm < 2590) return "North Africa";
-        if (distanceKm < 3590) return "Sahel";
+        if (distanceKm < 150) return "you remained in Central Europe";
+        if (distanceKm < 300) return "you reached the Alps";
+        if (distanceKm < 800) return "you reached France";
+        if (distanceKm < 950) return "you reached the Pyrenees";
+        if (distanceKm < 1450) return "you reached Iberia";
+        if (distanceKm < 1590) return "you Mediterranean Sea";
+        if (distanceKm < 2590) return "you reached North Africa";
+        if (distanceKm < 3590) return "you reached the Sahel";
         return "Deep Migration Route";
     }
 
