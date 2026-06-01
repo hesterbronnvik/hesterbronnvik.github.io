@@ -204,22 +204,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (let o of obstacles) {
 
-    if (o.type === "powerline") {
+if (o.type === "powerline") {
 
-        // pole line
-        ctx.strokeStyle = "#444";
-        ctx.beginPath();
-        ctx.moveTo(o.x, o.y);
-        ctx.lineTo(o.x + o.width, o.y);
-        ctx.stroke();
+    const startX = o.x;
+    const endX = o.x + o.width;
 
-        // small pole hint
-        ctx.beginPath();
-        ctx.moveTo(o.x + 10, o.y);
-        ctx.lineTo(o.x + 10, o.y + 30);
-        ctx.stroke();
+    const groundY = 180;
+    const towerHeight = 60;
 
+    // -------------------------
+    // towers (simplified pylons)
+    // -------------------------
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 2;
+
+    // left tower
+    ctx.beginPath();
+    ctx.moveTo(startX, groundY);
+    ctx.lineTo(startX + 10, groundY - towerHeight);
+    ctx.stroke();
+
+    // right tower
+    ctx.beginPath();
+    ctx.moveTo(endX, groundY);
+    ctx.lineTo(endX - 10, groundY - towerHeight);
+    ctx.stroke();
+
+    // cross beam
+    ctx.beginPath();
+    ctx.moveTo(startX + 10, groundY - towerHeight);
+    ctx.lineTo(endX - 10, groundY - towerHeight);
+    ctx.stroke();
+
+    // -------------------------
+    // sagging cable (catenary-ish curve)
+    // -------------------------
+    ctx.strokeStyle = "#555";
+    ctx.beginPath();
+
+    const steps = 20;
+    const sag = 25; // how much it droops
+
+    for (let i = 0; i <= steps; i++) {
+
+        const t = i / steps;
+
+        const x = startX + t * (endX - startX);
+
+        // parabola approximation of cable sag
+        const y =
+            groundY - towerHeight + 5 +
+            sag * (t - 0.5) * (t - 0.5) * 4;
+
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
     }
+
+    ctx.stroke();
+}
 
     if (o.type === "storm") {
 
