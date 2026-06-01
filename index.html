@@ -247,160 +247,7 @@ h1.animate-in, h2.animate-in, h3.animate-in, h4.animate-in, h5.animate-in, h6.an
   margin-top: 1em;
 }
 
-<script>
-    console.log("Game script loaded");
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const scoreDisplay = document.getElementById("score");
-
-let score = 0;
-let gameOver = false;
-
-const gravity = 0.7;
-
-const player = {
-  x: 50,
-  y: 170,
-  width: 35,
-  height: 35,
-  velocityY: 0,
-  jumping: false
-};
-
-let obstacles = [];
-let obstacleTimer = 0;
-
-function jump() {
-  if (!player.jumping && !gameOver) {
-    player.velocityY = -12;
-    player.jumping = true;
-  }
-}
-
-document.addEventListener("keydown", e => {
-  if (e.code === "Space" || e.code === "ArrowUp") {
-    e.preventDefault();
-
-    if (gameOver) {
-      restart();
-    } else {
-      jump();
-    }
-  }
-});
-
-function restart() {
-  score = 0;
-  gameOver = false;
-
-  player.y = 170;
-  player.velocityY = 0;
-  player.jumping = false;
-
-  obstacles = [];
-
-  requestAnimationFrame(loop);
-}
-
-function createObstacle() {
-  obstacles.push({
-    x: canvas.width,
-    y: 170,
-    width: 20,
-    height: 40
-  });
-}
-
-function update() {
-  player.velocityY += gravity;
-  player.y += player.velocityY;
-
-  if (player.y > 170) {
-    player.y = 170;
-    player.velocityY = 0;
-    player.jumping = false;
-  }
-
-  obstacleTimer++;
-
-  if (obstacleTimer > 90) {
-    createObstacle();
-    obstacleTimer = 0;
-  }
-
-  obstacles.forEach(o => {
-    o.x -= 6;
-  });
-
-  obstacles = obstacles.filter(o => o.x + o.width > 0);
-
-  obstacles.forEach(o => {
-    if (
-      player.x < o.x + o.width &&
-      player.x + player.width > o.x &&
-      player.y < o.y + o.height &&
-      player.y + player.height > o.y
-    ) {
-      gameOver = true;
-    }
-  });
-
-  score++;
-  scoreDisplay.textContent = "Score: " + score;
-}
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.strokeStyle = "#3a5a40";
-
-  ctx.beginPath();
-  ctx.moveTo(0, 210);
-  ctx.lineTo(canvas.width, 210);
-  ctx.stroke();
-
-  // "Bird"
-  ctx.fillStyle = "#3a5a40";
-  ctx.fillRect(
-    player.x,
-    player.y,
-    player.width,
-    player.height
-  );
-
-  ctx.fillStyle = "#B7C44B";
-
-  obstacles.forEach(o => {
-    ctx.fillRect(
-      o.x,
-      o.y,
-      o.width,
-      o.height
-    );
-  });
-
-  if (gameOver) {
-    ctx.fillStyle = "#000";
-    ctx.font = "32px sans-serif";
-    ctx.fillText("Game Over", 300, 100);
-
-    ctx.font = "18px sans-serif";
-    ctx.fillText("Press Space to restart", 280, 140);
-  }
-}
-
-function loop() {
-  if (!gameOver) {
-    update();
-    draw();
-    requestAnimationFrame(loop);
-  } else {
-    draw();
-  }
-}
-
-loop();
-</script>
+<script src="stork_game.js"></script>
     
   </style>
 </head>
@@ -549,6 +396,13 @@ loop();
     textElements.forEach(el => observer.observe(el));
   });
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // your animation code
+  });
+</script>
+
+<script src="stork_game.js"></script>
 
 </body>
 </html>
