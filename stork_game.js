@@ -300,17 +300,6 @@ function drawBiome(biome) {
         const biome = biomeRoute[biomeIndex].name;
 
         drawBiome(biome);
-        ctx.save();
-
-        ctx.globalAlpha = 0.4;
-        ctx.drawImage(img, x, 0, w, h);
-        ctx.drawImage(img, x + w, 0, w, h);
-        
-        ctx.restore();
-        
-        // atmospheric distance haze
-        ctx.fillStyle = "rgba(255,255,255,0.25)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // FOG
         ctx.fillStyle = `rgba(255,255,255,${fogAlpha})`;
