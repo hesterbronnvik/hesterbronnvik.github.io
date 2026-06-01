@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         desert: new Image()
     };
 
-    bg.farmland.src = "bg_farmland.png";
+    bg.farmland.src = "bg_farmland_2.png";
     bg.mountains.src = "bg_mountains.png";
     bg.sea.src = "bg_sea.png";
     bg.desert.src = "bg_desert.png";
@@ -269,17 +269,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // BIOME BACKGROUND
     // -----------------------
-    function drawBiome(biome) {
+    //function drawBiome(biome) {
 
-        let sky = "#F8F9F2";
+    //    let sky = "#F8F9F2";
 
-        if (biome === "farmland") sky = "#F2F7E6";
-        if (biome === "mountains") sky = "#D6D3D1";
-        if (biome === "sea") sky = "#A7D8FF";
-        if (biome === "desert") sky = "#F5D7A1";
+    //    if (biome === "farmland") sky = "#F2F7E6";
+    //    if (biome === "mountains") sky = "#D6D3D1";
+    //    if (biome === "sea") sky = "#A7D8FF";
+    //    if (biome === "desert") sky = "#F5D7A1";
 
-        ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //    ctx.fillStyle = sky;
+    //    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //}
+        function drawBiome(biome) {
+
+        const speed = cameraX * 0.3;
+
+        let img = bg.farmland;
+        if (biome === "mountains") img = bg.mountains;
+        if (biome === "sea") img = bg.sea;
+        if (biome === "desert") img = bg.desert;
+
+        const w = canvas.width;
+        const h = canvas.height;
+
+        const x = -(speed % w);
+
+        ctx.drawImage(img, x, 0, w, h);
+        ctx.drawImage(img, x + w, 0, w, h);
     }
 
     // -----------------------
