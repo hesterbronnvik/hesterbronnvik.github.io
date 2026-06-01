@@ -86,14 +86,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function getRegion(distanceKm) {
 
-        if (distanceKm < 150) return "Central Europe (Farmland)";
-        if (distanceKm < 300) return "Alps (Mountains)";
-        if (distanceKm < 800) return "France (Farmland Plains)";
-        if (distanceKm < 950) return "Alps Edge (Mountains)";
-        if (distanceKm < 1450) return "Iberia (Farmland)";
+        if (distanceKm < 150) return "Central Europe";
+        if (distanceKm < 300) return "Alps";
+        if (distanceKm < 800) return "France";
+        if (distanceKm < 950) return "Pyrenees";
+        if (distanceKm < 1450) return "Iberia";
         if (distanceKm < 1590) return "Mediterranean Sea";
-        if (distanceKm < 2590) return "North Africa (Desert)";
-        if (distanceKm < 3590) return "Sahara Transition Zone (Farmland)";
+        if (distanceKm < 2590) return "North Africa";
+        if (distanceKm < 3590) return "Sahel";
         return "Deep Migration Route";
     }
 
