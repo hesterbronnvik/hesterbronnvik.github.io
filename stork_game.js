@@ -267,23 +267,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // BIOME BACKGROUND
     // -----------------------
-    function drawBiome(biome) {
+function drawBiome(biome) {
 
-        const speed = cameraX * 0.3;
+    const speed = cameraX * 0.3;
 
-        let img = bg.farmland;
-        if (biome === "mountains") img = bg.mountains;
-        if (biome === "sea") img = bg.sea;
-        if (biome === "desert") img = bg.desert;
+    let img = bg.farmland;
+    if (biome === "mountains") img = bg.mountains;
+    if (biome === "sea") img = bg.sea;
+    if (biome === "desert") img = bg.desert;
 
-        const w = canvas.width;
-        const h = canvas.height;
+    const w = canvas.width;
+    const h = canvas.height;
 
-        const x = -(speed % w);
+    const x = -(speed % w);
 
-        ctx.drawImage(img, x, 0, w, h);
-        ctx.drawImage(img, x + w, 0, w, h);
-    }
+    // draw background faded
+    ctx.save();
+
+    ctx.globalAlpha = 0.35;   // ← adjust to taste
+
+    ctx.drawImage(img, x, 0, w, h);
+    ctx.drawImage(img, x + w, 0, w, h);
+
+    ctx.restore();
+}
 
     // -----------------------
     // DRAW
@@ -293,6 +300,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const biome = biomeRoute[biomeIndex].name;
 
         drawBiome(biome);
+        ctx.save();
+
+        ctx.globalAlpha = 0.4;
+        ctx.drawImage(img, x, 0, w, h);
+        ctx.drawImage(img, x + w, 0, w, h);
+        
+        ctx.restore();
+        
+        // atmospheric distance haze
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // FOG
         ctx.fillStyle = `rgba(255,255,255,${fogAlpha})`;
