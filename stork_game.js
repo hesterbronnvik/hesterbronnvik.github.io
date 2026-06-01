@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let cameraX = 0;
 
     // -----------------------
-    // BIOME ROUTE (YOUR DESIGN)
+    // BIOME ROUTE
     // -----------------------
     const biomeRoute = [
         { name: "farmland", length: 150 },
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // -----------------------
-    // REGION SYSTEM (YOUR FUNCTION)
+    // REGION SYSTEM
     // -----------------------
     function getRegion(distanceKm) {
 
@@ -289,6 +289,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        // simple cloud layer
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        for (let i = 0; i < 5; i++) {
+            let x = (i * 200 + cloudsX) % canvas.width;
+            ctx.beginPath();
+            ctx.arc(x, 80, 30, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
         if (biome === "farmland") {
             ctx.fillStyle = "#B7D07A";
             for (let i = 0; i < canvas.width; i += 40) {
@@ -365,6 +374,33 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
             return;
+        }
+        // -----------------------
+        // OBSTACLES DRAW
+        // -----------------------
+        for (let o of obstacles) {
+        
+            const screenX = o.x - cameraX;
+        
+            if (o.type === "powerline") {
+                ctx.drawImage(
+                    powerlineImg,
+                    screenX,
+                    o.y - 60,
+                    o.width,
+                    80
+                );
+            }
+        
+            if (o.type === "storm") {
+                ctx.drawImage(
+                    stormImg,
+                    screenX,
+                    o.y,
+                    o.width,
+                    o.height
+                );
+            }
         }
 
         // PLAYER
