@@ -284,7 +284,7 @@ function drawBiome(biome) {
     // draw background faded
     ctx.save();
 
-    ctx.globalAlpha = 0.35;   // ← adjust to taste
+    ctx.globalAlpha = 0.15;   // ← adjust to taste
 
     ctx.drawImage(img, x, 0, w, h);
     ctx.drawImage(img, x + w, 0, w, h);
