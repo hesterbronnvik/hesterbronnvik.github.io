@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    console.log("stork_game.js loaded");
-
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
+    const scoreEl = document.getElementById("score");
 
     // -----------------------
     // IMAGES
@@ -18,27 +17,30 @@ document.addEventListener("DOMContentLoaded", () => {
     stormImg.src = "storm.png";
 
     // -----------------------
-    // STATE
+    // GAME STATE (single source of truth)
     // -----------------------
-    let gameOver = false;
-    let gameStarted = false;
+    const STATE = {
+        START: "start",
+        PLAYING: "playing",
+        GAMEOVER: "gameover"
+    };
+
+    let gameState = STATE.START;
 
     let distance = 0;
-    const speed = 0.06;
-
-    const scoreEl = document.getElementById("score");
+    let difficulty = 1;
 
     let obstacles = [];
     let obstacleTimer = 0;
-
-    const gravity = 0.7;
-    let difficulty = 1;
 
     let weather = "clear";
     let weatherTimer = 0;
 
     let lightningFlash = 0;
     let lightningTimer = 0;
+
+    const gravity = 0.7;
+    const speed = 0.06;
 
     // -----------------------
     // PLAYER
@@ -57,25 +59,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     document.addEventListener("keydown", (e) => {
 
-        if (e.code === "Space" || e.code === "ArrowUp") {
-            e.preventDefault();
+        if (e.code !== "Space" && e.code !== "ArrowUp") return;
 
-            if (!gameStarted) {
-                gameStarted = true;
-                gameLoop();
-                return;
-            }
+        e.preventDefault();
 
-            if (gameOver) {
-                restart();
-            } else {
-                jump();
-            }
+        if (gameState === STATE.START) {
+            gameState = STATE.PLAYING;
+            return;
         }
+
+        if (gameState === STATE.GAMEOVER) {
+            restart();
+            return;
+        }
+
+        jump();
     });
 
     function jump() {
-        if (!player.jumping && !gameOver) {
+        if (!player.jumping && gameState === STATE.PLAYING) {
             player.velocityY = -12;
             player.jumping = true;
         }
@@ -86,12 +88,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function createObstacle() {
 
-        const types = ["powerline", "storm"];
-        const type = types[Math.floor(Math.random() * types.length)];
+        const type = Math.random() < 0.5 ? "powerline" : "storm";
 
         if (type === "powerline") {
             obstacles.push({
-                type: "powerline",
+                type,
                 x: canvas.width,
                 y: 180,
                 width: 80,
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         } else {
             obstacles.push({
-                type: "storm",
+                type,
                 x: canvas.width,
                 y: Math.random() * 80 + 20,
                 width: 90,
@@ -111,19 +112,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // RESTART
+    // RESTART (ONLY RESET STATE)
     // -----------------------
     function restart() {
 
-        gameOver = false;
+        gameState = STATE.PLAYING;
+
         distance = 0;
+        difficulty = 1;
+
+        obstacles = [];
+        obstacleTimer = 0;
+
+        weather = "clear";
+        weatherTimer = 0;
+
+        lightningFlash = 0;
+        lightningTimer = 0;
 
         player.y = 170;
         player.velocityY = 0;
         player.jumping = false;
-
-        obstacles = [];
-        obstacleTimer = 0;
     }
 
     // -----------------------
@@ -131,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        // gravity
+        // PLAYER physics
         player.velocityY += gravity;
         player.y += player.velocityY;
 
@@ -141,24 +150,27 @@ document.addEventListener("DOMContentLoaded", () => {
             player.jumping = false;
         }
 
-        // difficulty
+        // SCORE
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
         difficulty = 1 + distance / 100;
 
-        // spawn obstacles
+        // OBSTACLES
         obstacleTimer++;
-        if (obstacleTimer > Math.max(35, 90 / difficulty)) {
+        const spawnRate = Math.max(35, 90 / difficulty);
+
+        if (obstacleTimer > spawnRate) {
             createObstacle();
             obstacleTimer = 0;
         }
 
-        // weather
+        // WEATHER
         weatherTimer++;
         if (weatherTimer > 600) {
             weatherTimer = 0;
-            const roll = Math.random();
-            weather = roll < 0.5 ? "clear" : roll < 0.8 ? "cloudy" : "storm";
+
+            const r = Math.random();
+            weather = r < 0.5 ? "clear" : r < 0.8 ? "cloudy" : "storm";
         }
 
         let weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
@@ -166,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
         obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeed);
         obstacles = obstacles.filter(o => o.x + o.width > 0);
 
-        // lightning
+        // LIGHTNING
         if (weather === "storm") {
             lightningTimer++;
             if (lightningTimer > 60 + Math.random() * 120) {
@@ -174,10 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 lightningTimer = 0;
             }
         }
+
         if (lightningFlash > 0) lightningFlash--;
 
-        // collision
-        const playerBox = {
+        // COLLISION
+        const p = {
             x: player.x + 10,
             y: player.y + 8,
             width: player.width - 20,
@@ -186,20 +199,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         for (let o of obstacles) {
 
-            const oBox = {
-                x: o.x + (o.hitbox?.xOffset || 0),
-                y: o.y + (o.hitbox?.yOffset || 0),
-                width: o.hitbox?.width || o.width,
-                height: o.hitbox?.height || o.height
+            const h = o.hitbox || o;
+
+            const ob = {
+                x: o.x + (h.xOffset || 0),
+                y: o.y + (h.yOffset || 0),
+                width: h.width,
+                height: h.height
             };
 
             if (
-                playerBox.x < oBox.x + oBox.width &&
-                playerBox.x + playerBox.width > oBox.x &&
-                playerBox.y < oBox.y + oBox.height &&
-                playerBox.y + playerBox.height > oBox.y
+                p.x < ob.x + ob.width &&
+                p.x + p.width > ob.x &&
+                p.y < ob.y + ob.height &&
+                p.y + p.height > ob.y
             ) {
-                gameOver = true;
+                gameState = STATE.GAMEOVER;
             }
         }
     }
@@ -216,13 +231,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        // LIGHTNING FLASH
         if (lightningFlash > 0) {
             ctx.fillStyle = "rgba(255,255,255,0.7)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
+        // START SCREEN
+        if (gameState === STATE.START) {
+            ctx.fillStyle = "#000";
+            ctx.font = "30px Arial";
+            ctx.fillText("Press SPACE to Start", 200, 120);
+            return;
+        }
+
         // GAME OVER SCREEN
-        if (gameOver) {
+        if (gameState === STATE.GAMEOVER) {
             ctx.fillStyle = "rgba(0,0,0,0.4)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -232,14 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
-            return;
-        }
-
-        // START SCREEN
-        if (!gameStarted) {
-            ctx.fillStyle = "#000";
-            ctx.font = "30px Arial";
-            ctx.fillText("Press SPACE to Start", 200, 120);
             return;
         }
 
@@ -257,34 +273,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // LOOP
+    // GAME LOOP (ONLY ONE EVER)
     // -----------------------
     function gameLoop() {
 
-        if (!gameStarted) {
-            draw();
-            requestAnimationFrame(gameLoop);
-            return;
+        if (gameState === STATE.PLAYING) {
+            update();
         }
 
-        if (!gameOver) {
-            update();
-            draw();
-            requestAnimationFrame(gameLoop);
-        } else {
-            draw();
-        }
+        draw();
+        requestAnimationFrame(gameLoop);
     }
 
     // -----------------------
-    // START
+    // START GAME
     // -----------------------
-    Promise.all([
-        new Promise(r => storkImg.onload = r),
-        new Promise(r => powerlineImg.onload = r),
-        new Promise(r => stormImg.onload = r)
-    ]).then(() => {
-        console.log("all images loaded");
-        draw(); // show start screen
-    });
+    gameLoop();
 });
