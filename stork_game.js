@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // LOAD SPRITE (optional)
     // =====================
     const storkImg = new Image();
-    storkImg.src = "stork.png"; // optional; game still works without it
+    storkImg.src = "stork.svg"; // optional; game still works without it
 
     let frame = 0;
     let frameTick = 0;
