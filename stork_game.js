@@ -313,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             ctx.fillStyle = "#fff";
             ctx.font = "36px Arial";
-            ctx.fillText(Math.floor(distance) + " km", 120, 120);
+            ctx.fillText(Math.floor(distance) + " km:",  + region, 120, 120);
 
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
@@ -321,13 +321,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // PLAYER (silhouette swap)
-        const flightBob = Math.sin(distance * 2) * 2;
-        const y = player.y + flightBob;
+        //const flightBob = Math.sin(distance * 2) * 2;
+        //const y = player.y + flightBob;
 
-        const currentStork =
-            lightningFlash > 0 ? storkSilhouetteImg : storkImg;
+        //const currentStork =
+          //  lightningFlash > 0 ? storkSilhouetteImg : storkImg;
 
-        ctx.drawImage(currentStork, player.x, y, player.width, player.height);
+        //ctx.drawImage(currentStork, player.x, y, player.width, player.height);
 
         // OBSTACLES
         for (let o of obstacles) {
