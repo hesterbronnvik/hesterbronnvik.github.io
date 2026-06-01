@@ -1,0 +1,43 @@
+<svg width="128" height="64" viewBox="0 0 128 64" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- ================= FRAME 1 ================= -->
+  <g transform="translate(0,0)">
+    <!-- body -->
+    <ellipse cx="32" cy="34" rx="10" ry="6" fill="white" stroke="black" stroke-width="1"/>
+
+    <!-- head -->
+    <circle cx="42" cy="30" r="3" fill="white" stroke="black" stroke-width="1"/>
+
+    <!-- beak -->
+    <line x1="45" y1="30" x2="52" y2="32" stroke="orange" stroke-width="2"/>
+
+    <!-- wings up -->
+    <path d="M25 34 Q15 20 30 25" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M25 36 Q15 50 30 42" fill="none" stroke="black" stroke-width="2"/>
+
+    <!-- legs -->
+    <line x1="30" y1="40" x2="28" y2="55" stroke="black" stroke-width="1"/>
+    <line x1="34" y1="40" x2="36" y2="55" stroke="black" stroke-width="1"/>
+  </g>
+
+  <!-- ================= FRAME 2 ================= -->
+  <g transform="translate(64,0)">
+    <!-- body -->
+    <ellipse cx="32" cy="34" rx="10" ry="6" fill="white" stroke="black" stroke-width="1"/>
+
+    <!-- head -->
+    <circle cx="42" cy="30" r="3" fill="white" stroke="black" stroke-width="1"/>
+
+    <!-- beak -->
+    <line x1="45" y1="30" x2="52" y2="32" stroke="orange" stroke-width="2"/>
+
+    <!-- wings down -->
+    <path d="M25 34 Q15 40 30 45" fill="none" stroke="black" stroke-width="2"/>
+    <path d="M25 36 Q15 25 30 28" fill="none" stroke="black" stroke-width="2"/>
+
+    <!-- legs -->
+    <line x1="30" y1="40" x2="28" y2="55" stroke="black" stroke-width="1"/>
+    <line x1="34" y1="40" x2="36" y2="55" stroke="black" stroke-width="1"/>
+  </g>
+
+</svg>
