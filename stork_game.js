@@ -39,7 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let obstacleTimer = 0;
     let gameOver = false;
     let score = 0;
-
+    let distance = 0;
+    
+    const speed = 0.06; // km per frame (tune this later)
     const scoreDisplay = document.getElementById("score");
 
     // =====================
@@ -104,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function restart() {
         obstacles = [];
         obstacleTimer = 0;
-        score = 0;
+        distance = 0;
         gameOver = false;
 
         player.y = 170;
@@ -161,8 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // score
         if (!gameOver) {
-            score++;
-            scoreDisplay.textContent = "Score: " + score;
+           distance += speed;
+            // round for display
+            let km = distance.toFixed(2);
+            
+            scoreDisplay.textContent = "Migration distance: " + km + " km";
         }
     }
 
@@ -239,8 +244,8 @@ if (o.type === "powerline") {
         // game over screen
         if (gameOver) {
             ctx.fillStyle = "black";
-            ctx.font = "30px Arial";
-            ctx.fillText("Migration failed", 260, 100);
+            ctx.font = "30px Helvetica";
+            ctx.fillText("Death", 260, 100);
 
             ctx.font = "16px Arial";
             ctx.fillText("Press Space to restart", 260, 140);
