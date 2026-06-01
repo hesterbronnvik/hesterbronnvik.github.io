@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     bg.farmland.src = "bg_farmland_2.png";
-    bg.mountains.src = "bg_mountains.png";
+    bg.mountains.src = "bg_mountains_2.png";
     bg.sea.src = "bg_sea.png";
     bg.desert.src = "bg_desert.png";
 
