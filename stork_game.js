@@ -11,10 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
     storkImg.src = "stork8bit.png";
 
     const powerlineImg = new Image();
-    powerlineImg.src = "tower.png";
+    powerlineImg.src = "tower8bit.png";
 
     const stormImg = new Image();
-    stormImg.src = "storm.png";
+    stormImg.src = "storm8bit.png";
+
+    // -----------------------
+    // WORLD SETTINGS
+    // -----------------------
+    const groundY = 260; // 🐦 KEY FIX: world shifted down
 
     // -----------------------
     // GAME STATE
@@ -44,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let biomeIndex = 0;
     let biomeDistance = 0;
 
-    // parallax layers
+    // parallax
     let cloudsX = 0;
     let farLayerX = 0;
     let midLayerX = 0;
@@ -53,11 +58,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const speed = 0.06;
 
     // -----------------------
-    // PLAYER
+    // PLAYER (NOW FLYING ABOVE GROUND)
     // -----------------------
     const player = {
         x: 50,
-        y: 170,
+        y: groundY - 90, // 🐦 flying height
         width: 40,
         height: 40,
         velocityY: 0,
@@ -103,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
             obstacles.push({
                 type,
                 x: canvas.width,
-                y: 180,
+                y: groundY - 60, // 🐦 anchored to ground
                 width: 80,
                 height: 20,
                 hitbox: { xOffset: 0, yOffset: -5, width: 80, height: 10 }
@@ -146,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         farLayerX = 0;
         midLayerX = 0;
 
-        player.y = 170;
+        player.y = groundY - 90; // 🐦 reset flying height
         player.velocityY = 0;
         player.jumping = false;
     }
@@ -156,34 +161,36 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        // physics
+        // PLAYER physics (flying above ground)
         player.velocityY += gravity;
         player.y += player.velocityY;
 
-        if (player.y > 170) {
-            player.y = 170;
+        const maxFlyHeight = groundY - 90;
+
+        if (player.y > maxFlyHeight) {
+            player.y = maxFlyHeight;
             player.velocityY = 0;
             player.jumping = false;
         }
 
-        // score
+        // SCORE
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
         difficulty = 1 + distance / 100;
 
-        // biome switching
+        // BIOMES
         biomeDistance += speed;
         if (biomeDistance > 80) {
             biomeDistance = 0;
             biomeIndex = (biomeIndex + 1) % biomes.length;
         }
 
-        // parallax motion
+        // PARALLAX
         cloudsX -= 0.2;
         farLayerX -= 0.6;
         midLayerX -= 1.2;
 
-        // obstacle spawn
+        // OBSTACLES
         obstacleTimer++;
         const spawnRate = Math.max(35, 90 / difficulty);
 
@@ -192,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
             obstacleTimer = 0;
         }
 
-        // weather
+        // WEATHER
         weatherTimer++;
         if (weatherTimer > 600) {
             weatherTimer = 0;
@@ -202,11 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
 
-        // obstacles move
         obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeed);
         obstacles = obstacles.filter(o => o.x + o.width > 0);
 
-        // lightning
+        // LIGHTNING
         if (weather === "storm") {
             lightningTimer++;
             if (lightningTimer > 60 + Math.random() * 120) {
@@ -216,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (lightningFlash > 0) lightningFlash--;
 
-        // collision
+        // COLLISION
         const p = {
             x: player.x + 10,
             y: player.y + 8,
@@ -241,22 +247,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 p.y < ob.y + ob.height &&
                 p.y + p.height > ob.y
             ) {
-                gameState = "gameover";
+                gameState = STATE.GAMEOVER;
             }
         }
     }
 
     // -----------------------
-    // DRAW BIOMES
+    // DRAW BIOMES (GROUND FIXED)
     // -----------------------
     function drawBiome(biome) {
 
+        // SKY BASE
+        let sky = "#F8F9F2";
+
+        if (biome === "farmland") sky = "#F2F7E6";
+        if (biome === "mountains") sky = "#D6D3D1";
+        if (biome === "sea") sky = "#A7D8FF";
+        if (biome === "desert") sky = "#F5D7A1";
+
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // FARMLAND
         if (biome === "farmland") {
 
-            ctx.fillStyle = "#F2F7E6";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // clouds
             ctx.fillStyle = "rgba(255,255,255,0.7)";
             for (let i = 0; i < 6; i++) {
                 ctx.beginPath();
@@ -264,49 +278,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.fill();
             }
 
-            // fields
             ctx.fillStyle = "#B7D07A";
             for (let i = 0; i < canvas.width; i += 40) {
-                ctx.fillRect((i + farLayerX) % canvas.width, 180, 20, 40);
+                ctx.fillRect((i + farLayerX) % canvas.width, groundY, 20, 60);
             }
         }
 
+        // MOUNTAINS
         if (biome === "mountains") {
-
-            ctx.fillStyle = "#D6D3D1";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#9CA3AF";
             for (let i = 0; i < 6; i++) {
                 ctx.beginPath();
-                ctx.moveTo((i * 180 + farLayerX) % canvas.width, 200);
-                ctx.lineTo((i * 180 + 80 + farLayerX) % canvas.width, 120);
-                ctx.lineTo((i * 180 + 160 + farLayerX) % canvas.width, 200);
+                ctx.moveTo((i * 180 + farLayerX) % canvas.width, groundY);
+                ctx.lineTo((i * 180 + 80 + farLayerX) % canvas.width, 140);
+                ctx.lineTo((i * 180 + 160 + farLayerX) % canvas.width, groundY);
                 ctx.fill();
             }
         }
 
+        // SEA
         if (biome === "sea") {
-
-            ctx.fillStyle = "#A7D8FF";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#60A5FA";
             for (let i = 0; i < canvas.width; i += 30) {
-                let waveY = 180 + Math.sin((i + cloudsX) * 0.05) * 5;
+                let waveY = groundY - 40 + Math.sin((i + cloudsX) * 0.05) * 5;
                 ctx.fillRect((i + farLayerX) % canvas.width, waveY, 20, 20);
             }
         }
 
+        // DESERT
         if (biome === "desert") {
-
-            ctx.fillStyle = "#F5D7A1";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#E7B66C";
             for (let i = 0; i < canvas.width; i += 80) {
                 ctx.beginPath();
-                ctx.arc((i + farLayerX) % canvas.width, 200, 40, 0, Math.PI);
+                ctx.arc((i + farLayerX) % canvas.width, groundY, 40, 0, Math.PI);
                 ctx.fill();
             }
         }
@@ -326,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // start screen
+        // START
         if (gameState === STATE.START) {
             ctx.fillStyle = "#000";
             ctx.font = "30px Arial";
@@ -334,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // game over
+        // GAME OVER
         if (gameState === STATE.GAMEOVER) {
             ctx.fillStyle = "rgba(0,0,0,0.4)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -348,10 +355,18 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // player
-        ctx.drawImage(storkImg, player.x, player.y, player.width, player.height);
+        // PLAYER (flying feel)
+        const flightBob = Math.sin(distance * 2) * 2;
 
-        // obstacles
+        ctx.drawImage(
+            storkImg,
+            player.x,
+            player.y + flightBob,
+            player.width,
+            player.height
+        );
+
+        // OBSTACLES
         for (let o of obstacles) {
             if (o.type === "powerline") {
                 ctx.drawImage(powerlineImg, o.x, o.y - 60, o.width, 80);
@@ -360,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // biome label
+        // BIOME LABEL
         ctx.fillStyle = "rgba(0,0,0,0.4)";
         ctx.font = "16px Arial";
         ctx.fillText(biome.toUpperCase(), 20, 60);
