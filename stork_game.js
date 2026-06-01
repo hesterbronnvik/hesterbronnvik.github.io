@@ -6,47 +6,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvas.getContext("2d");
 
     // -----------------------
-    // ADD IMAGES
+    // IMAGES
     // -----------------------
     const storkImg = new Image();
-    storkImg.onload = () => console.log("stork loaded");
-    storkImg.onerror = () => console.error("stork FAILED");
     storkImg.src = "stork.png";
-    
+
     const powerlineImg = new Image();
-    powerlineImg.onload = () => console.log("tower loaded");
-    powerlineImg.onerror = () => console.error("tower FAILED");
     powerlineImg.src = "tower.png";
-    
+
     const stormImg = new Image();
-    stormImg.onload = () => console.log("storm loaded");
-    stormImg.onerror = () => console.error("storm FAILED");
     stormImg.src = "storm.png";
 
     // -----------------------
-    // GAME STATE
+    // STATE
     // -----------------------
     let gameOver = false;
     let gameStarted = false;
 
     let distance = 0;
-    const speed = 0.06; // km per frame
+    const speed = 0.06;
+
     const scoreEl = document.getElementById("score");
 
     let obstacles = [];
     let obstacleTimer = 0;
 
     const gravity = 0.7;
-
     let difficulty = 1;
 
-    let weather = "clear"; // clear, cloudy, storm
+    let weather = "clear";
     let weatherTimer = 0;
 
     let lightningFlash = 0;
     let lightningTimer = 0;
+
     // -----------------------
-    // PLAYER (STORK)
+    // PLAYER
     // -----------------------
     const player = {
         x: 50,
@@ -62,22 +57,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     document.addEventListener("keydown", (e) => {
 
-    if (e.code === "Space" || e.code === "ArrowUp") {
-        e.preventDefault();
+        if (e.code === "Space" || e.code === "ArrowUp") {
+            e.preventDefault();
 
-        if (!gameStarted) {
-            gameStarted = true;
-            gameLoop(); // start the game manually
-            return;
-        }
+            if (!gameStarted) {
+                gameStarted = true;
+                gameLoop();
+                return;
+            }
 
-        if (gameOver) {
-            restart();
-        } else {
-            jump();
+            if (gameOver) {
+                restart();
+            } else {
+                jump();
+            }
         }
-    }
-});
+    });
 
     function jump() {
         if (!player.jumping && !gameOver) {
@@ -95,37 +90,22 @@ document.addEventListener("DOMContentLoaded", () => {
         const type = types[Math.floor(Math.random() * types.length)];
 
         if (type === "powerline") {
-
             obstacles.push({
                 type: "powerline",
                 x: canvas.width,
                 y: 180,
                 width: 80,
                 height: 20,
-
-                hitbox: {
-                    xOffset: 0,
-                    yOffset: -5,
-                    width: 80,
-                    height: 10
-                }
+                hitbox: { xOffset: 0, yOffset: -5, width: 80, height: 10 }
             });
-
         } else {
-
             obstacles.push({
                 type: "storm",
                 x: canvas.width,
                 y: Math.random() * 80 + 20,
                 width: 90,
                 height: 60,
-
-                hitbox: {
-                    xOffset: 10,
-                    yOffset: 10,
-                    width: 60,
-                    height: 40
-                }
+                hitbox: { xOffset: 10, yOffset: 10, width: 60, height: 40 }
             });
         }
     }
@@ -134,13 +114,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // RESTART
     // -----------------------
     function restart() {
+
         gameOver = false;
         distance = 0;
-    
+
         player.y = 170;
         player.velocityY = 0;
         player.jumping = false;
-    
+
         obstacles = [];
         obstacleTimer = 0;
     }
@@ -160,6 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
             player.jumping = false;
         }
 
+        // difficulty
+        distance += speed;
+        scoreEl.textContent = Math.floor(distance) + " km";
+        difficulty = 1 + distance / 100;
+
         // spawn obstacles
         obstacleTimer++;
         if (obstacleTimer > Math.max(35, 90 / difficulty)) {
@@ -167,51 +153,29 @@ document.addEventListener("DOMContentLoaded", () => {
             obstacleTimer = 0;
         }
 
-        // move obstacles
-        let weatherSpeedMultiplier = 1;
-
-        if (weather === "cloudy") weatherSpeedMultiplier = 1.1;
-        if (weather === "storm") weatherSpeedMultiplier = 1.3;
-        
-        obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeedMultiplier);
-
-        obstacles = obstacles.filter(o => o.x + o.width > 0);
-
-        // distance
-        distance += speed;
-        scoreEl.textContent = Math.floor(distance) + " km";
-
-        difficulty = 1 + distance / 100;
-
-        // weather dynamic
+        // weather
         weatherTimer++;
-
-        if (weatherTimer > 600) { // ~10 seconds (adjust if needed)
+        if (weatherTimer > 600) {
             weatherTimer = 0;
-        
             const roll = Math.random();
-        
-            if (roll < 0.5) {
-                weather = "clear";
-            } else if (roll < 0.8) {
-                weather = "cloudy";
-            } else {
-                weather = "storm";
-            }
+            weather = roll < 0.5 ? "clear" : roll < 0.8 ? "cloudy" : "storm";
         }
 
+        let weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
+
+        obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeed);
+        obstacles = obstacles.filter(o => o.x + o.width > 0);
+
+        // lightning
         if (weather === "storm") {
             lightningTimer++;
-        
             if (lightningTimer > 60 + Math.random() * 120) {
-                lightningFlash = 6; // flash duration
+                lightningFlash = 6;
                 lightningTimer = 0;
             }
         }
-        
-        if (lightningFlash > 0) {
-            lightningFlash--;
-        }
+        if (lightningFlash > 0) lightningFlash--;
+
         // collision
         const playerBox = {
             x: player.x + 10,
@@ -244,78 +208,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // DRAW
     // -----------------------
     function draw() {
-        
-        if (weather === "clear") {
-            ctx.fillStyle = "#F8F9F2";
-        } else if (weather === "cloudy") {
-            ctx.fillStyle = "#b8c6d6";
-        } else {
-            ctx.fillStyle = "#6b7c93";
-        }
-        
+
+        // BACKGROUND
+        if (weather === "clear") ctx.fillStyle = "#F8F9F2";
+        else if (weather === "cloudy") ctx.fillStyle = "#b8c6d6";
+        else ctx.fillStyle = "#6b7c93";
+
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         if (lightningFlash > 0) {
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // ground
-        //ctx.beginPath();
-        //ctx.moveTo(0, 210);
-        //ctx.lineTo(canvas.width, 210);
-        //ctx.stroke();
-
-        // player 
-        ctx.drawImage(
-            storkImg,
-            player.x,
-            player.y,
-            player.width,
-            player.height
-        );
-
-        // obstacles
-        for (let o of obstacles) {
-
-           if (o.type === "powerline") {
-
-                    ctx.drawImage(
-                        powerlineImg,
-                        o.x,
-                        o.y - 60,
-                        o.width,
-                        80
-                    );
-                }
-            
-                if (o.type === "storm") {
-                
-                    ctx.drawImage(
-                        stormImg,
-                        o.x,
-                        o.y,
-                        o.width,
-                        o.height
-                    );
-                }
-        }
-
-        // UI text
-                
+        // GAME OVER SCREEN
         if (gameOver) {
             ctx.fillStyle = "rgba(0,0,0,0.4)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
             ctx.fillStyle = "#fff";
             ctx.font = "40px Arial";
             ctx.fillText("DEATH", 220, 120);
-        
+
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
             return;
         }
 
+        // START SCREEN
         if (!gameStarted) {
             ctx.fillStyle = "#000";
             ctx.font = "30px Arial";
@@ -323,17 +243,30 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // PLAYER
+        ctx.drawImage(storkImg, player.x, player.y, player.width, player.height);
+
+        // OBSTACLES
+        for (let o of obstacles) {
+            if (o.type === "powerline") {
+                ctx.drawImage(powerlineImg, o.x, o.y - 60, o.width, 80);
+            } else {
+                ctx.drawImage(stormImg, o.x, o.y, o.width, o.height);
+            }
+        }
+    }
+
     // -----------------------
     // LOOP
     // -----------------------
     function gameLoop() {
-    
+
         if (!gameStarted) {
             draw();
             requestAnimationFrame(gameLoop);
             return;
         }
-    
+
         if (!gameOver) {
             update();
             draw();
@@ -343,12 +276,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-            Promise.all([
-            new Promise(resolve => storkImg.onload = resolve),
-            new Promise(resolve => powerlineImg.onload = resolve),
-            new Promise(resolve => stormImg.onload = resolve)
-        ]).then(() => {
-            console.log("all images loaded");
-            draw(); // show start screen
-        });
+    // -----------------------
+    // START
+    // -----------------------
+    Promise.all([
+        new Promise(r => storkImg.onload = r),
+        new Promise(r => powerlineImg.onload = r),
+        new Promise(r => stormImg.onload = r)
+    ]).then(() => {
+        console.log("all images loaded");
+        draw(); // show start screen
+    });
 });
