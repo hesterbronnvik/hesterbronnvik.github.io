@@ -199,12 +199,12 @@ stormImg.src = "storm.png";
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // ground
-        ctx.beginPath();
-        ctx.moveTo(0, 210);
-        ctx.lineTo(canvas.width, 210);
-        ctx.stroke();
+        //ctx.beginPath();
+        //ctx.moveTo(0, 210);
+        //ctx.lineTo(canvas.width, 210);
+        //ctx.stroke();
 
-        // player (stork placeholder)
+        // player 
         ctx.drawImage(
             storkImg,
             player.x,
@@ -251,7 +251,7 @@ stormImg.src = "storm.png";
 
         if (gameOver) {
             ctx.font = "40px Arial";
-            ctx.fillText("GAME OVER", 250, 120);
+            ctx.fillText("DEATH", 250, 120);
 
             ctx.font = "20px Arial";
             ctx.fillText("Press Space to Restart", 250, 160);
