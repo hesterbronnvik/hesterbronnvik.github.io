@@ -272,5 +272,12 @@ stormImg.src = "storm.png";
         }
     }
 
-    gameLoop();
+            Promise.all([
+            new Promise(resolve => storkImg.onload = resolve),
+            new Promise(resolve => powerlineImg.onload = resolve),
+            new Promise(resolve => stormImg.onload = resolve)
+        ]).then(() => {
+            console.log("all images loaded");
+            gameLoop();
+        });
 });
