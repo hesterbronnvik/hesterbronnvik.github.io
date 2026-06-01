@@ -1,44 +1,16 @@
 console.log("stork_game.js loaded");
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Stork Game</title>
+document.addEventListener("DOMContentLoaded", () => {
 
-<style>
-body {
-    margin: 0;
-    background: #f5f5f5;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding-top: 40px;
-}
+    console.log("stork_game.js loaded");
 
-#gameContainer {
-    text-align: center;
-}
+    const canvas = document.getElementById("gameCanvas");
 
-canvas {
-    border: 2px solid #333;
-    background: white;
-}
+    if (!canvas) {
+        console.error("Canvas not found");
+        return;
+    }
 
-#score {
-    margin-top: 10px;
-    font-size: 24px;
-}
-</style>
-</head>
-
-<body>
-
-<div id="gameContainer">
-    <canvas id="game" width="800" height="250"></canvas>
-    <div id="score">Score: 0</div>
-</div>
-
-<script>
+    const ctx = canvas.getContext("2d");
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
