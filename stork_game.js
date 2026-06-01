@@ -8,14 +8,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // ADD IMAGES
     // -----------------------
-    const storkImg = new Image();
-    storkImg.src = "stork.png";
+const storkImg = new Image();
+storkImg.onload = () => console.log("stork loaded");
+storkImg.onerror = () => console.error("stork FAILED");
+storkImg.src = "stork.png";
 
-    const powerlineImg = new Image();
-    powerlineImg.src = "tower.png";
+const powerlineImg = new Image();
+powerlineImg.onload = () => console.log("tower loaded");
+powerlineImg.onerror = () => console.error("tower FAILED");
+powerlineImg.src = "tower.png";
 
-    const stormImg = new Image();
-    stormImg.src = "storm.png";
+const stormImg = new Image();
+stormImg.onload = () => console.log("storm loaded");
+stormImg.onerror = () => console.error("storm FAILED");
+stormImg.src = "storm.png";
 
     // -----------------------
     // GAME STATE
