@@ -98,16 +98,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // REGION SYSTEM
     // -----------------------
-    function getRegion(distanceKm) {
+    function getRegion(km) {
 
-        if (distanceKm < 150) return "you remained in Central Europe";
-        if (distanceKm < 300) return "you reached the Alps";
-        if (distanceKm < 800) return "you reached France";
-        if (distanceKm < 950) return "you reached the Pyrenees";
-        if (distanceKm < 1450) return "you reached Iberia!";
-        if (distanceKm < 1590) return "you Mediterranean Sea";
-        if (distanceKm < 2590) return "you reached North Africa!";
-        if (distanceKm < 3590) return "you reached the Sahel!";
+        if (km < 150) return "you remained in Central Europe";
+        if (km < 300) return "you reached the Alps";
+        if (km < 800) return "you reached France";
+        if (km < 950) return "you reached the Pyrenees";
+        if (km < 1450) return "you reached Iberia!";
+        if (km < 1590) return "you Mediterranean Sea";
+        if (km < 2590) return "you reached North Africa!";
+        if (km < 3590) return "you reached the Sahel!";
         return "Deep Migration Route";
     }
 
@@ -267,30 +267,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // BIOME BACKGROUND
     // -----------------------
-function drawBiome(biome) {
+    function drawBiome(biome) {
 
-    const speed = cameraX * 0.3;
+        let sky = "#F8F9F2";
 
-    let img = bg.farmland;
-    if (biome === "mountains") img = bg.mountains;
-    if (biome === "sea") img = bg.sea;
-    if (biome === "desert") img = bg.desert;
+        if (biome === "farmland") sky = "#F2F7E6";
+        if (biome === "mountains") sky = "#D6D3D1";
+        if (biome === "sea") sky = "#A7D8FF";
+        if (biome === "desert") sky = "#F5D7A1";
 
-    const w = canvas.width;
-    const h = canvas.height;
-
-    const x = -(speed % w);
-
-    // draw background faded
-    ctx.save();
-
-    ctx.globalAlpha = 0.15;   // ← adjust to taste
-
-    ctx.drawImage(img, x, 0, w, h);
-    ctx.drawImage(img, x + w, 0, w, h);
-
-    ctx.restore();
-}
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     // -----------------------
     // DRAW
