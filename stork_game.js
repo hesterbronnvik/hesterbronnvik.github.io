@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stormImg.src = "storm.png";
 
     // -----------------------
-    // GAME STATE (single source of truth)
+    // GAME STATE
     // -----------------------
     const STATE = {
         START: "start",
@@ -33,11 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
     let obstacles = [];
     let obstacleTimer = 0;
 
+    // weather
     let weather = "clear";
     let weatherTimer = 0;
-
     let lightningFlash = 0;
     let lightningTimer = 0;
+
+    // biomes
+    const biomes = ["farmland", "mountains", "sea", "desert"];
+    let biomeIndex = 0;
+    let biomeDistance = 0;
+
+    // parallax layers
+    let cloudsX = 0;
+    let farLayerX = 0;
+    let midLayerX = 0;
 
     const gravity = 0.7;
     const speed = 0.06;
@@ -60,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", (e) => {
 
         if (e.code !== "Space" && e.code !== "ArrowUp") return;
-
         e.preventDefault();
 
         if (gameState === STATE.START) {
@@ -112,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // RESTART (ONLY RESET STATE)
+    // RESTART
     // -----------------------
     function restart() {
 
@@ -130,6 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
         lightningFlash = 0;
         lightningTimer = 0;
 
+        biomeIndex = 0;
+        biomeDistance = 0;
+
+        cloudsX = 0;
+        farLayerX = 0;
+        midLayerX = 0;
+
         player.y = 170;
         player.velocityY = 0;
         player.jumping = false;
@@ -140,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        // PLAYER physics
+        // physics
         player.velocityY += gravity;
         player.y += player.velocityY;
 
@@ -150,12 +166,24 @@ document.addEventListener("DOMContentLoaded", () => {
             player.jumping = false;
         }
 
-        // SCORE
+        // score
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
         difficulty = 1 + distance / 100;
 
-        // OBSTACLES
+        // biome switching
+        biomeDistance += speed;
+        if (biomeDistance > 80) {
+            biomeDistance = 0;
+            biomeIndex = (biomeIndex + 1) % biomes.length;
+        }
+
+        // parallax motion
+        cloudsX -= 0.2;
+        farLayerX -= 0.6;
+        midLayerX -= 1.2;
+
+        // obstacle spawn
         obstacleTimer++;
         const spawnRate = Math.max(35, 90 / difficulty);
 
@@ -164,21 +192,21 @@ document.addEventListener("DOMContentLoaded", () => {
             obstacleTimer = 0;
         }
 
-        // WEATHER
+        // weather
         weatherTimer++;
         if (weatherTimer > 600) {
             weatherTimer = 0;
-
             const r = Math.random();
             weather = r < 0.5 ? "clear" : r < 0.8 ? "cloudy" : "storm";
         }
 
         let weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
 
+        // obstacles move
         obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeed);
         obstacles = obstacles.filter(o => o.x + o.width > 0);
 
-        // LIGHTNING
+        // lightning
         if (weather === "storm") {
             lightningTimer++;
             if (lightningTimer > 60 + Math.random() * 120) {
@@ -186,10 +214,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 lightningTimer = 0;
             }
         }
-
         if (lightningFlash > 0) lightningFlash--;
 
-        // COLLISION
+        // collision
         const p = {
             x: player.x + 10,
             y: player.y + 8,
@@ -214,7 +241,73 @@ document.addEventListener("DOMContentLoaded", () => {
                 p.y < ob.y + ob.height &&
                 p.y + p.height > ob.y
             ) {
-                gameState = STATE.GAMEOVER;
+                gameState = "gameover";
+            }
+        }
+    }
+
+    // -----------------------
+    // DRAW BIOMES
+    // -----------------------
+    function drawBiome(biome) {
+
+        if (biome === "farmland") {
+
+            ctx.fillStyle = "#F2F7E6";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // clouds
+            ctx.fillStyle = "rgba(255,255,255,0.7)";
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.arc((i * 140 + cloudsX * 10) % canvas.width, 60 + i * 8, 18, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // fields
+            ctx.fillStyle = "#B7D07A";
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.fillRect((i + farLayerX) % canvas.width, 180, 20, 40);
+            }
+        }
+
+        if (biome === "mountains") {
+
+            ctx.fillStyle = "#D6D3D1";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#9CA3AF";
+            for (let i = 0; i < 6; i++) {
+                ctx.beginPath();
+                ctx.moveTo((i * 180 + farLayerX) % canvas.width, 200);
+                ctx.lineTo((i * 180 + 80 + farLayerX) % canvas.width, 120);
+                ctx.lineTo((i * 180 + 160 + farLayerX) % canvas.width, 200);
+                ctx.fill();
+            }
+        }
+
+        if (biome === "sea") {
+
+            ctx.fillStyle = "#A7D8FF";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#60A5FA";
+            for (let i = 0; i < canvas.width; i += 30) {
+                let waveY = 180 + Math.sin((i + cloudsX) * 0.05) * 5;
+                ctx.fillRect((i + farLayerX) % canvas.width, waveY, 20, 20);
+            }
+        }
+
+        if (biome === "desert") {
+
+            ctx.fillStyle = "#F5D7A1";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#E7B66C";
+            for (let i = 0; i < canvas.width; i += 80) {
+                ctx.beginPath();
+                ctx.arc((i + farLayerX) % canvas.width, 200, 40, 0, Math.PI);
+                ctx.fill();
             }
         }
     }
@@ -224,20 +317,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function draw() {
 
-        // BACKGROUND
-        if (weather === "clear") ctx.fillStyle = "#F8F9F2";
-        else if (weather === "cloudy") ctx.fillStyle = "#b8c6d6";
-        else ctx.fillStyle = "#6b7c93";
+        const biome = biomes[biomeIndex];
 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawBiome(biome);
 
-        // LIGHTNING FLASH
         if (lightningFlash > 0) {
             ctx.fillStyle = "rgba(255,255,255,0.7)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // START SCREEN
+        // start screen
         if (gameState === STATE.START) {
             ctx.fillStyle = "#000";
             ctx.font = "30px Arial";
@@ -245,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // GAME OVER SCREEN
+        // game over
         if (gameState === STATE.GAMEOVER) {
             ctx.fillStyle = "rgba(0,0,0,0.4)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -259,10 +348,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // PLAYER
+        // player
         ctx.drawImage(storkImg, player.x, player.y, player.width, player.height);
 
-        // OBSTACLES
+        // obstacles
         for (let o of obstacles) {
             if (o.type === "powerline") {
                 ctx.drawImage(powerlineImg, o.x, o.y - 60, o.width, 80);
@@ -270,23 +359,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.drawImage(stormImg, o.x, o.y, o.width, o.height);
             }
         }
+
+        // biome label
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.font = "16px Arial";
+        ctx.fillText(biome.toUpperCase(), 20, 60);
     }
 
     // -----------------------
-    // GAME LOOP (ONLY ONE EVER)
+    // LOOP
     // -----------------------
-    function gameLoop() {
-
-        if (gameState === STATE.PLAYING) {
-            update();
-        }
-
+    function loop() {
+        if (gameState === STATE.PLAYING) update();
         draw();
-        requestAnimationFrame(gameLoop);
+        requestAnimationFrame(loop);
     }
 
-    // -----------------------
-    // START GAME
-    // -----------------------
-    gameLoop();
+    loop();
 });
