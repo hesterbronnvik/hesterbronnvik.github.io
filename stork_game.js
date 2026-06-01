@@ -6,6 +6,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = canvas.getContext("2d");
 
     // -----------------------
+    // ADD IMAGES
+    // -----------------------
+    const storkImg = new Image();
+    storkImg.src = "stork.png";
+
+    const powerlineImg = new Image();
+    powerlineImg.src = "tower.png";
+
+    const stormImg = new Image();
+    stormImg.src = "storm.png";
+
+    // -----------------------
     // GAME STATE
     // -----------------------
     let gameOver = false;
@@ -187,64 +199,38 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.stroke();
 
         // player (stork placeholder)
-        ctx.fillStyle = "#3a5a40";
-        ctx.fillRect(player.x, player.y, player.width, player.height);
+        ctx.drawImage(
+            storkImg,
+            player.x,
+            player.y,
+            player.width,
+            player.height
+        );
 
         // obstacles
         for (let o of obstacles) {
 
-            if (o.type === "powerline") {
+           if (o.type === "powerline") {
 
-                const startX = o.x;
-                const endX = o.x + o.width;
-                const baseY = 180;
-                const towerH = 60;
-
-                ctx.strokeStyle = "#333";
-
-                // towers
-                ctx.beginPath();
-                ctx.moveTo(startX, baseY);
-                ctx.lineTo(startX + 10, baseY - towerH);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(endX, baseY);
-                ctx.lineTo(endX - 10, baseY - towerH);
-                ctx.stroke();
-
-                // wire
-                ctx.strokeStyle = "#555";
-                ctx.beginPath();
-
-                const steps = 20;
-                const sag = 25;
-
-                for (let i = 0; i <= steps; i++) {
-
-                    const t = i / steps;
-                    const x = startX + t * (endX - startX);
-
-                    const y =
-                        baseY - towerH + 5 +
-                        sag * (t - 0.5) * (t - 0.5) * 4;
-
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                    ctx.drawImage(
+                        powerlineImg,
+                        o.x,
+                        o.y - 60,
+                        o.width,
+                        80
+                    );
                 }
-
-                ctx.stroke();
-            }
-
-            if (o.type === "storm") {
-
-                ctx.fillStyle = "rgba(120,120,120,0.8)";
-                ctx.beginPath();
-                ctx.arc(o.x + 20, o.y, 20, 0, Math.PI * 2);
-                ctx.arc(o.x + 45, o.y + 5, 25, 0, Math.PI * 2);
-                ctx.arc(o.x + 65, o.y, 18, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            
+                if (o.type === "storm") {
+                
+                    ctx.drawImage(
+                        stormImg,
+                        o.x,
+                        o.y,
+                        o.width,
+                        o.height
+                    );
+                }
         }
 
         // UI text
