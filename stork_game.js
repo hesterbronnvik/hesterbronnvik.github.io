@@ -8,28 +8,30 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     // ADD IMAGES
     // -----------------------
-const storkImg = new Image();
-storkImg.onload = () => console.log("stork loaded");
-storkImg.onerror = () => console.error("stork FAILED");
-storkImg.src = "stork.png";
-
-const powerlineImg = new Image();
-powerlineImg.onload = () => console.log("tower loaded");
-powerlineImg.onerror = () => console.error("tower FAILED");
-powerlineImg.src = "tower.png";
-
-const stormImg = new Image();
-stormImg.onload = () => console.log("storm loaded");
-stormImg.onerror = () => console.error("storm FAILED");
-stormImg.src = "storm.png";
+    const storkImg = new Image();
+    storkImg.onload = () => console.log("stork loaded");
+    storkImg.onerror = () => console.error("stork FAILED");
+    storkImg.src = "stork.png";
+    
+    const powerlineImg = new Image();
+    powerlineImg.onload = () => console.log("tower loaded");
+    powerlineImg.onerror = () => console.error("tower FAILED");
+    powerlineImg.src = "tower.png";
+    
+    const stormImg = new Image();
+    stormImg.onload = () => console.log("storm loaded");
+    stormImg.onerror = () => console.error("storm FAILED");
+    stormImg.src = "storm.png";
 
     // -----------------------
     // GAME STATE
     // -----------------------
     let gameOver = false;
+    let gameStarted = false;
 
     let distance = 0;
     const speed = 0.06; // km per frame
+    const scoreEl = document.getElementById("score");
 
     let obstacles = [];
     let obstacleTimer = 0;
@@ -53,16 +55,22 @@ stormImg.src = "storm.png";
     // -----------------------
     document.addEventListener("keydown", (e) => {
 
-        if (e.code === "Space" || e.code === "ArrowUp") {
-            e.preventDefault();
+    if (e.code === "Space" || e.code === "ArrowUp") {
+        e.preventDefault();
 
-            if (gameOver) {
-                restart();
-            } else {
-                jump();
-            }
+        if (!gameStarted) {
+            gameStarted = true;
+            gameLoop(); // start the game manually
+            return;
         }
-    });
+
+        if (gameOver) {
+            restart();
+        } else {
+            jump();
+        }
+    }
+});
 
     function jump() {
         if (!player.jumping && !gameOver) {
@@ -162,6 +170,7 @@ stormImg.src = "storm.png";
 
         // distance
         distance += speed;
+        scoreEl.textContent = Math.floor(distance) + " km";
 
         // collision
         const playerBox = {
@@ -240,15 +249,14 @@ stormImg.src = "storm.png";
         }
 
         // UI text
+        
+        if (!gameStarted) {
         ctx.fillStyle = "#000";
-        ctx.font = "18px Arial";
-
-        ctx.fillText(
-            "Migration distance: " + distance.toFixed(2) + " km",
-            20,
-            30
-        );
-
+        ctx.font = "30px Arial";
+        ctx.fillText("Press SPACE to Start", 200, 120);
+        return;
+    }
+        
         if (gameOver) {
             ctx.font = "40px Arial";
             ctx.fillText("DEATH", 250, 120);
@@ -262,7 +270,13 @@ stormImg.src = "storm.png";
     // LOOP
     // -----------------------
     function gameLoop() {
-
+    
+        if (!gameStarted) {
+            draw();
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+    
         if (!gameOver) {
             update();
             draw();
@@ -276,8 +290,8 @@ stormImg.src = "storm.png";
             new Promise(resolve => storkImg.onload = resolve),
             new Promise(resolve => powerlineImg.onload = resolve),
             new Promise(resolve => stormImg.onload = resolve)
-        ]).then(() => {
-            console.log("all images loaded");
-            gameLoop();
-        });
+        }).then(() => {
+        console.log("all images loaded");
+        draw(); // show start screen
+    });
 });
