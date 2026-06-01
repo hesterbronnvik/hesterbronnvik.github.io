@@ -9,11 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // LOAD SPRITE (optional)
     // =====================
     const storkImg = new Image();
-    storkImg.src = "stork.svg"; // optional; game still works without it
+    storkImg.src = "images/stork.svg"; // optional; game still works without it
 
     let frame = 0;
     let frameTick = 0;
 
+    
+    // =====================
+    // LOAD OBSTACLES
+    // =====================
+    const towerImg = new Image();
+    towerImg.src = "images/tower.png";
+    
     // =====================
     // GAME STATE
     // =====================
@@ -167,10 +174,10 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // ground
-        ctx.beginPath();
-        ctx.moveTo(0, 210);
-        ctx.lineTo(canvas.width, 210);
-        ctx.stroke();
+        //ctx.beginPath();
+        //ctx.moveTo(0, 210);
+        //ctx.lineTo(canvas.width, 210);
+        //ctx.stroke();
 
         // animate sprite frame
         frameTick++;
@@ -206,64 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 if (o.type === "powerline") {
 
-    const startX = o.x;
-    const endX = o.x + o.width;
-
-    const groundY = 180;
-    const towerHeight = 60;
-
-    // -------------------------
-    // towers (simplified pylons)
-    // -------------------------
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 2;
-
-    // left tower
-    ctx.beginPath();
-    ctx.moveTo(startX, groundY);
-    ctx.lineTo(startX + 10, groundY - towerHeight);
-    ctx.stroke();
-
-    // right tower
-    ctx.beginPath();
-    ctx.moveTo(endX, groundY);
-    ctx.lineTo(endX - 10, groundY - towerHeight);
-    ctx.stroke();
-
-    // cross beam
-    ctx.beginPath();
-    ctx.moveTo(startX + 10, groundY - towerHeight);
-    ctx.lineTo(endX - 10, groundY - towerHeight);
-    ctx.stroke();
-
-    // -------------------------
-    // sagging cable (catenary-ish curve)
-    // -------------------------
-    ctx.strokeStyle = "#555";
-    ctx.beginPath();
-
-    const steps = 20;
-    const sag = 25; // how much it droops
-
-    for (let i = 0; i <= steps; i++) {
-
-        const t = i / steps;
-
-        const x = startX + t * (endX - startX);
-
-        // parabola approximation of cable sag
-        const y =
-            groundY - towerHeight + 5 +
-            sag * (t - 0.5) * (t - 0.5) * 4;
-
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-    }
-
-    ctx.stroke();
+    ctx.drawImage(towerImg, o.x, o.y - 60, 40, 80);
 }
 
     if (o.type === "storm") {
