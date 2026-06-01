@@ -1,8 +1,9 @@
+console.log("stork_game.js loaded");
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dino Game</title>
+<title>Stork Game</title>
 
 <style>
 body {
