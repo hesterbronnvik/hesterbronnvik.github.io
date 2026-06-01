@@ -8,33 +8,36 @@ document.addEventListener("DOMContentLoaded", () => {
     // IMAGES
     // -----------------------
     const storkImg = new Image();
-    storkImg.src = "stork8bit.png";
+    storkImg.src = "stork.png";
 
     const powerlineImg = new Image();
-    powerlineImg.src = "pylon8bit.png";
+    powerlineImg.src = "tower.png";
 
     const stormImg = new Image();
-    stormImg.src = "storm8bit.png";
+    stormImg.src = "storm.png";
 
     // -----------------------
-    // WORLD SETTINGS
+    // WORLD
     // -----------------------
     const groundY = 260;
-
     let cameraX = 0;
 
-    function getRegion(distanceKm) {
+    // -----------------------
+    // BIOME ROUTE (YOUR DESIGN)
+    // -----------------------
+    const biomeRoute = [
+        { name: "farmland", length: 150 },
+        { name: "mountains", length: 150 },
+        { name: "farmland", length: 500 },
+        { name: "mountains", length: 150 },
+        { name: "farmland", length: 500 },
+        { name: "sea", length: 140 },
+        { name: "desert", length: 1000 },
+        { name: "farmland", length: 1000 }
+    ];
 
-    if (distanceKm < 80) return "Central Europe";
-    if (distanceKm < 200) return "Alps";
-    if (distanceKm < 700) return "France";
-    if (distanceKm < 1700) return "Iberia";
-    if (distanceKm < 2700) return "North Africa";
-    if (distanceKm < 4200) return "Sahara";
-    if (distanceKm < 6700) return "Central Africa";
-    if (distanceKm < 9000) return "Southern Africa";
-    return "Deep Migration Route";
-}
+    let biomeIndex = 0;
+    let biomeProgress = 0;
 
     // -----------------------
     // GAME STATE
@@ -59,11 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let lightningFlash = 0;
     let lightningTimer = 0;
 
-    // biomes
-    const biomes = ["farmland", "mountains", "sea", "desert"];
-    let biomeIndex = 0;
-    let biomeDistance = 0;
-
     // parallax
     let cloudsX = 0;
     let farLayerX = 0;
@@ -72,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const speed = 0.06;
 
     // -----------------------
-    // PLAYER
+    // PLAYER (FLYING STORK)
     // -----------------------
     const player = {
         x: 50,
@@ -82,6 +80,22 @@ document.addEventListener("DOMContentLoaded", () => {
         velocityY: 0,
         jumping: false
     };
+
+    // -----------------------
+    // REGION SYSTEM (YOUR FUNCTION)
+    // -----------------------
+    function getRegion(distanceKm) {
+
+        if (distanceKm < 150) return "Central Europe (Farmland)";
+        if (distanceKm < 300) return "Alps (Mountains)";
+        if (distanceKm < 800) return "France (Farmland Plains)";
+        if (distanceKm < 950) return "Alps Edge (Mountains)";
+        if (distanceKm < 1450) return "Iberia (Farmland)";
+        if (distanceKm < 1590) return "Mediterranean Sea";
+        if (distanceKm < 2590) return "North Africa (Desert)";
+        if (distanceKm < 3590) return "Sahara Transition Zone (Farmland)";
+        return "Deep Migration Route";
+    }
 
     // -----------------------
     // INPUT
@@ -118,25 +132,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const type = Math.random() < 0.5 ? "powerline" : "storm";
 
-        if (type === "powerline") {
-            obstacles.push({
-                type,
-                x: cameraX + canvas.width + 200,
-                y: groundY - 60,
-                width: 80,
-                height: 20,
-                hitbox: { xOffset: 0, yOffset: -5, width: 80, height: 10 }
-            });
-        } else {
-            obstacles.push({
-                type,
-                x: cameraX + canvas.width + 200,
-                y: Math.random() * 80 + 20,
-                width: 90,
-                height: 60,
-                hitbox: { xOffset: 10, yOffset: 10, width: 60, height: 40 }
-            });
-        }
+        obstacles.push({
+            type,
+            x: cameraX + canvas.width + 200,
+            y: type === "powerline" ? groundY - 60 : Math.random() * 80 + 20,
+            width: type === "powerline" ? 80 : 90,
+            height: type === "powerline" ? 20 : 60,
+            hitbox: type === "powerline"
+                ? { xOffset: 0, yOffset: -5, width: 80, height: 10 }
+                : { xOffset: 10, yOffset: 10, width: 60, height: 40 }
+        });
     }
 
     // -----------------------
@@ -148,7 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         distance = 0;
         difficulty = 1;
-
         cameraX = 0;
 
         obstacles = [];
@@ -156,12 +160,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         weather = "clear";
         weatherTimer = 0;
-
         lightningFlash = 0;
         lightningTimer = 0;
 
         biomeIndex = 0;
-        biomeDistance = 0;
+        biomeProgress = 0;
 
         player.y = groundY - 90;
         player.velocityY = 0;
@@ -173,10 +176,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        // camera moves forward
-        cameraX += 6 * difficulty * (weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1);
+        // CAMERA movement
+        const weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
+        cameraX += 6 * difficulty * weatherSpeed;
 
-        // physics
+        // PLAYER physics (flying feel)
         player.velocityY += gravity;
         player.y += player.velocityY;
 
@@ -188,34 +192,41 @@ document.addEventListener("DOMContentLoaded", () => {
             player.jumping = false;
         }
 
-        // distance + UI
+        // DISTANCE + SCORE
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
 
-        // 🔥 SLOWER DIFFICULTY CURVE (IMPORTANT FIX)
-        difficulty = 1 + Math.pow(distance / 200, 1.2);
+        // 🔥 SLOW + CONTROLLED DIFFICULTY
+        difficulty = 1 + Math.pow(distance / 220, 1.15);
 
-        // biome switching
-        biomeDistance += speed;
-        if (biomeDistance > 80) {
-            biomeDistance = 0;
-            biomeIndex = (biomeIndex + 1) % biomes.length;
+        // BIOME ROUTE PROGRESSION
+        biomeProgress += speed;
+
+        if (biomeProgress > biomeRoute[biomeIndex].length) {
+            biomeProgress = 0;
+            biomeIndex++;
+
+            if (biomeIndex >= biomeRoute.length) {
+                biomeIndex = biomeRoute.length - 1;
+            }
         }
 
-        // parallax
+        // PARALLAX
         cloudsX -= 0.2;
         farLayerX -= 0.6;
 
-        // spawn
+        // OBSTACLES
         obstacleTimer++;
-        const spawnRate = Math.max(45, 110 / difficulty); // slower + more survivable
+        const spawnRate = Math.max(45, 110 / difficulty);
 
         if (obstacleTimer > spawnRate) {
             createObstacle();
             obstacleTimer = 0;
         }
 
-        // weather
+        obstacles = obstacles.filter(o => (o.x - cameraX) < canvas.width + 300);
+
+        // WEATHER
         weatherTimer++;
         if (weatherTimer > 700) {
             weatherTimer = 0;
@@ -223,12 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
             weather = r < 0.5 ? "clear" : r < 0.8 ? "cloudy" : "storm";
         }
 
-        let weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
-
-        // collision move filter
-        obstacles = obstacles.filter(o => (o.x - cameraX) < canvas.width + 300);
-
-        // lightning
+        // LIGHTNING
         if (weather === "storm") {
             lightningTimer++;
             if (lightningTimer > 80 + Math.random() * 140) {
@@ -238,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (lightningFlash > 0) lightningFlash--;
 
-        // collision
+        // COLLISION
         const p = {
             x: player.x + 10,
             y: player.y + 8,
@@ -269,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // BIOMES
+    // BIOME RENDERING
     // -----------------------
     function drawBiome(biome) {
 
@@ -324,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function draw() {
 
-        const biome = biomes[biomeIndex];
+        const biome = biomeRoute[biomeIndex].name;
 
         drawBiome(biome);
 
@@ -341,25 +347,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (gameState === STATE.GAMEOVER) {
+
             const region = getRegion(distance);
 
-                ctx.fillStyle = "rgba(0,0,0,0.4)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = "#fff";
-                ctx.font = "40px Arial";
-                
-                ctx.fillText(
-                    Math.floor(distance) + " km, " + region,
-                    120,
-                    120
-                );
-                
-                ctx.font = "20px Arial";
-                ctx.fillText("Press SPACE to Restart", 200, 160);
-                return;
+            ctx.fillStyle = "rgba(0,0,0,0.4)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#fff";
+            ctx.font = "36px Arial";
+
+            ctx.fillText(
+                Math.floor(distance) + " km, " + region,
+                120,
+                120
+            );
+
+            ctx.font = "20px Arial";
+            ctx.fillText("Press SPACE to Restart", 200, 160);
+            return;
         }
 
+        // PLAYER
         const flightBob = Math.sin(distance * 2) * 2;
 
         ctx.drawImage(
@@ -370,6 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
             player.height
         );
 
+        // BIOME LABEL
         ctx.fillStyle = "rgba(0,0,0,0.4)";
         ctx.font = "16px Arial";
         ctx.fillText(biome.toUpperCase(), 20, 60);
