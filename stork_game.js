@@ -40,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let difficulty = 1;
 
+    let weather = "clear"; // clear, cloudy, storm
+    let weatherTimer = 0;
+
+    let lightningFlash = 0;
+    let lightningTimer = 0;
     // -----------------------
     // PLAYER (STORK)
     // -----------------------
@@ -166,7 +171,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // move obstacles
-        obstacles.forEach(o => o.x -= 6 * difficulty);
+        let weatherSpeedMultiplier = 1;
+
+        if (weather === "cloudy") weatherSpeedMultiplier = 1.1;
+        if (weather === "storm") weatherSpeedMultiplier = 1.3;
+        
+        obstacles.forEach(o => o.x -= 6 * difficulty * weatherSpeedMultiplier);
 
         obstacles = obstacles.filter(o => o.x + o.width > 0);
 
@@ -176,6 +186,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
         difficulty = 1 + distance / 100;
 
+        // weather dynamic
+        weatherTimer++;
+
+        if (weatherTimer > 600) { // ~10 seconds (adjust if needed)
+            weatherTimer = 0;
+        
+            const roll = Math.random();
+        
+            if (roll < 0.5) {
+                weather = "clear";
+            } else if (roll < 0.8) {
+                weather = "cloudy";
+            } else {
+                weather = "storm";
+            }
+        }
+
+        if (weather === "storm") {
+            lightningTimer++;
+        
+            if (lightningTimer > 60 + Math.random() * 120) {
+                lightningFlash = 6; // flash duration
+                lightningTimer = 0;
+            }
+        }
+        
+        if (lightningFlash > 0) {
+            lightningFlash--;
+        }
         // collision
         const playerBox = {
             x: player.x + 10,
@@ -208,8 +247,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // DRAW
     // -----------------------
     function draw() {
+        
+        if (weather === "clear") {
+            ctx.fillStyle = "#F8F9F2";
+        } else if (weather === "cloudy") {
+            ctx.fillStyle = "#b8c6d6";
+        } else {
+            ctx.fillStyle = "#6b7c93";
+        }
+        
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (lightningFlash > 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         // ground
         //ctx.beginPath();
