@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // IMAGES
     // -----------------------
     const storkImg = new Image();
-    storkImg.src = "stork.png";
+    storkImg.src = "stork8bit.png";
 
     const powerlineImg = new Image();
-    powerlineImg.src = "tower.png";
+    powerlineImg.src = "pylon8bit.png";
 
     const stormImg = new Image();
-    stormImg.src = "storm.png";
+    stormImg.src = "storm8bit.png";
 
     // -----------------------
     // WORLD SETTINGS
@@ -22,6 +22,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const groundY = 260;
 
     let cameraX = 0;
+
+    function getRegion(distanceKm) {
+
+    if (distanceKm < 80) return "Central Europe";
+    if (distanceKm < 200) return "Alps";
+    if (distanceKm < 700) return "France";
+    if (distanceKm < 1700) return "Iberia";
+    if (distanceKm < 2700) return "North Africa";
+    if (distanceKm < 4200) return "Sahara";
+    if (distanceKm < 6700) return "Central Africa";
+    if (distanceKm < 9000) return "Southern Africa";
+    return "Deep Migration Route";
+}
 
     // -----------------------
     // GAME STATE
@@ -328,16 +341,23 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (gameState === STATE.GAMEOVER) {
-            ctx.fillStyle = "rgba(0,0,0,0.4)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const region = getRegion(distance);
 
-            ctx.fillStyle = "#fff";
-            ctx.font = "40px Arial";
-            ctx.fillText("DEATH", 220, 120);
-
-            ctx.font = "20px Arial";
-            ctx.fillText("Press SPACE to Restart", 200, 160);
-            return;
+                ctx.fillStyle = "rgba(0,0,0,0.4)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = "#fff";
+                ctx.font = "40px Arial";
+                
+                ctx.fillText(
+                    Math.floor(distance) + " km, " + region,
+                    120,
+                    120
+                );
+                
+                ctx.font = "20px Arial";
+                ctx.fillText("Press SPACE to Restart", 200, 160);
+                return;
         }
 
         const flightBob = Math.sin(distance * 2) * 2;
