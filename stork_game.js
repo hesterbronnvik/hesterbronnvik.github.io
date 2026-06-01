@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     storkImg.src = "stork8bit.png";
 
     const powerlineImg = new Image();
-    powerlineImg.src = "tower8bit.png";
+    powerlineImg.src = "pylon8bit.png";
 
     const stormImg = new Image();
     stormImg.src = "storm8bit.png";
