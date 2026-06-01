@@ -56,21 +56,22 @@ document.addEventListener("DOMContentLoaded", () => {
     let obstacles = [];
     let obstacleTimer = 0;
 
-    // weather
+    // -----------------------
+    // WEATHER
+    // -----------------------
     let weather = "clear";
     let weatherTimer = 0;
+
     let lightningFlash = 0;
     let lightningTimer = 0;
 
-    // parallax
-    let cloudsX = 0;
-    let farLayerX = 0;
-
-    const gravity = 0.7;
-    const speed = 0.06;
+    // -----------------------
+    // ATMOSPHERE
+    // -----------------------
+    let fogAlpha = 0;
 
     // -----------------------
-    // PLAYER (FLYING STORK)
+    // PLAYER
     // -----------------------
     const player = {
         x: 50,
@@ -81,6 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
         jumping: false
     };
 
+    const gravity = 0.7;
+    const speed = 0.06;
+
     // -----------------------
     // REGION SYSTEM
     // -----------------------
@@ -90,10 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (distanceKm < 300) return "you reached the Alps";
         if (distanceKm < 800) return "you reached France";
         if (distanceKm < 950) return "you reached the Pyrenees";
-        if (distanceKm < 1450) return "you reached Iberia";
+        if (distanceKm < 1450) return "you reached Iberia!";
         if (distanceKm < 1590) return "you Mediterranean Sea";
-        if (distanceKm < 2590) return "you reached North Africa";
-        if (distanceKm < 3590) return "you reached the Sahel";
+        if (distanceKm < 2590) return "you reached North Africa!";
+        if (distanceKm < 3590) return "you reached the Sahel!";
         return "Deep Migration Route";
     }
 
@@ -160,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         weather = "clear";
         weatherTimer = 0;
+
         lightningFlash = 0;
         lightningTimer = 0;
 
@@ -176,11 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // -----------------------
     function update() {
 
-        // CAMERA movement
         const weatherSpeed = weather === "storm" ? 1.3 : weather === "cloudy" ? 1.1 : 1;
+
         cameraX += 6 * difficulty * weatherSpeed;
 
-        // PLAYER physics (flying feel)
+        // physics
         player.velocityY += gravity;
         player.y += player.velocityY;
 
@@ -192,30 +197,22 @@ document.addEventListener("DOMContentLoaded", () => {
             player.jumping = false;
         }
 
-        // DISTANCE + SCORE
+        // distance
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
 
-        // 🔥 SLOW + CONTROLLED DIFFICULTY
+        // difficulty (smooth curve)
         difficulty = 1 + Math.pow(distance / 220, 1.15);
 
-        // BIOME ROUTE PROGRESSION
+        // biome progression
         biomeProgress += speed;
 
         if (biomeProgress > biomeRoute[biomeIndex].length) {
             biomeProgress = 0;
-            biomeIndex++;
-
-            if (biomeIndex >= biomeRoute.length) {
-                biomeIndex = biomeRoute.length - 1;
-            }
+            biomeIndex = Math.min(biomeIndex + 1, biomeRoute.length - 1);
         }
 
-        // PARALLAX
-        cloudsX -= 0.2;
-        farLayerX -= 0.6;
-
-        // OBSTACLES
+        // spawn obstacles
         obstacleTimer++;
         const spawnRate = Math.max(45, 110 / difficulty);
 
@@ -226,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         obstacles = obstacles.filter(o => (o.x - cameraX) < canvas.width + 300);
 
-        // WEATHER
+        // weather
         weatherTimer++;
         if (weatherTimer > 700) {
             weatherTimer = 0;
@@ -234,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
             weather = r < 0.5 ? "clear" : r < 0.8 ? "cloudy" : "storm";
         }
 
-        // LIGHTNING
+        // lightning
         if (weather === "storm") {
             lightningTimer++;
             if (lightningTimer > 80 + Math.random() * 140) {
@@ -244,7 +241,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (lightningFlash > 0) lightningFlash--;
 
-        // COLLISION
+        // fog target
+        let targetFog = 0.08;
+        if (weather === "cloudy") targetFog = 0.12;
+        if (weather === "storm") targetFog = 0.18;
+        if (lightningFlash > 0) targetFog += 0.12;
+
+        fogAlpha += (targetFog - fogAlpha) * 0.02;
+
+        // collision
         const p = {
             x: player.x + 10,
             y: player.y + 8,
@@ -275,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -----------------------
-    // BIOME RENDERING
+    // BIOME DRAW
     // -----------------------
     function drawBiome(biome) {
 
@@ -288,50 +293,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         ctx.fillStyle = sky;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // simple cloud layer
-        ctx.fillStyle = "rgba(255,255,255,0.4)";
-        for (let i = 0; i < 5; i++) {
-            let x = (i * 200 + cloudsX) % canvas.width;
-            ctx.beginPath();
-            ctx.arc(x, 80, 30, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        if (biome === "farmland") {
-            ctx.fillStyle = "#B7D07A";
-            for (let i = 0; i < canvas.width; i += 40) {
-                ctx.fillRect((i + farLayerX - cameraX * 0.2) % canvas.width, groundY, 20, 60);
-            }
-        }
-
-        if (biome === "mountains") {
-            ctx.fillStyle = "#9CA3AF";
-            for (let i = 0; i < 6; i++) {
-                ctx.beginPath();
-                ctx.moveTo((i * 180 + farLayerX - cameraX * 0.1) % canvas.width, groundY);
-                ctx.lineTo((i * 180 + 80 + farLayerX - cameraX * 0.1) % canvas.width, 140);
-                ctx.lineTo((i * 180 + 160 + farLayerX - cameraX * 0.1) % canvas.width, groundY);
-                ctx.fill();
-            }
-        }
-
-        if (biome === "sea") {
-            ctx.fillStyle = "#60A5FA";
-            for (let i = 0; i < canvas.width; i += 30) {
-                let waveY = groundY - 40 + Math.sin(i * 0.05) * 5;
-                ctx.fillRect((i + farLayerX - cameraX * 0.15) % canvas.width, waveY, 20, 20);
-            }
-        }
-
-        if (biome === "desert") {
-            ctx.fillStyle = "#E7B66C";
-            for (let i = 0; i < canvas.width; i += 80) {
-                ctx.beginPath();
-                ctx.arc((i + farLayerX - cameraX * 0.2) % canvas.width, groundY, 40, 0, Math.PI);
-                ctx.fill();
-            }
-        }
     }
 
     // -----------------------
@@ -343,11 +304,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         drawBiome(biome);
 
+        // fog
+        ctx.fillStyle = `rgba(255,255,255,${fogAlpha})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // lightning cinematic
         if (lightningFlash > 0) {
-            ctx.fillStyle = "rgba(255,255,255,0.7)";
+
+            const i = lightningFlash / 6;
+
+            ctx.fillStyle = `rgba(255,255,255,${0.9 * i})`;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = `rgba(0,0,0,${0.35 * i})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.globalCompositeOperation = "multiply";
+            ctx.fillStyle = `rgba(255,255,255,${0.4 * i})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.globalCompositeOperation = "source-over";
         }
 
+        // START SCREEN
         if (gameState === STATE.START) {
             ctx.fillStyle = "#000";
             ctx.font = "30px Arial";
@@ -355,11 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // GAME OVER
         if (gameState === STATE.GAMEOVER) {
 
             const region = getRegion(distance);
 
-            ctx.fillStyle = "rgba(0,0,0,0.4)";
+            ctx.fillStyle = "rgba(0,0,0,0.5)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#fff";
@@ -375,46 +354,33 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillText("Press SPACE to Restart", 200, 160);
             return;
         }
-        // -----------------------
-        // OBSTACLES DRAW
-        // -----------------------
+
+        // OBSTACLES
         for (let o of obstacles) {
-        
-            const screenX = o.x - cameraX;
-        
+
+            const x = o.x - cameraX;
+
             if (o.type === "powerline") {
-                ctx.drawImage(
-                    powerlineImg,
-                    screenX,
-                    o.y - 60,
-                    o.width,
-                    80
-                );
-            }
-        
-            if (o.type === "storm") {
-                ctx.drawImage(
-                    stormImg,
-                    screenX,
-                    o.y,
-                    o.width,
-                    o.height
-                );
+                ctx.drawImage(powerlineImg, x, o.y - 60, o.width, 80);
+            } else {
+                ctx.drawImage(stormImg, x, o.y, o.width, o.height);
             }
         }
 
-        // PLAYER
+        // PLAYER (silhouette during lightning)
         const flightBob = Math.sin(distance * 2) * 2;
+        const y = player.y + flightBob;
 
-        ctx.drawImage(
-            storkImg,
-            player.x,
-            player.y + flightBob,
-            player.width,
-            player.height
-        );
+        const isLightning = lightningFlash > 0;
 
-        // BIOME LABEL
+        ctx.drawImage(storkImg, player.x, y, player.width, player.height);
+
+        if (isLightning) {
+            ctx.fillStyle = "rgba(0,0,0,0.75)";
+            ctx.fillRect(player.x, y, player.width, player.height);
+        }
+
+        // UI
         ctx.fillStyle = "rgba(0,0,0,0.4)";
         ctx.font = "16px Arial";
         ctx.fillText(biome.toUpperCase(), 20, 60);
