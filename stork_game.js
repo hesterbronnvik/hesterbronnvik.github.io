@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const gravity = 0.7;
 
+    let difficulty = 1;
+
     // -----------------------
     // PLAYER (STORK)
     // -----------------------
@@ -158,19 +160,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // spawn obstacles
         obstacleTimer++;
-        if (obstacleTimer > 90) {
+        if (obstacleTimer > Math.max(35, 90 / difficulty)) {
             createObstacle();
             obstacleTimer = 0;
         }
 
         // move obstacles
-        obstacles.forEach(o => o.x -= 6);
+        obstacles.forEach(o => o.x -= 6 * difficulty);
 
         obstacles = obstacles.filter(o => o.x + o.width > 0);
 
         // distance
         distance += speed;
         scoreEl.textContent = Math.floor(distance) + " km";
+
+        difficulty = 1 + distance / 100;
 
         // collision
         const playerBox = {
