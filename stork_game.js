@@ -307,21 +307,27 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (gameState === STATE.GAMEOVER) {\
+if (gameState === STATE.GAMEOVER) {
 
             const region = getRegion(distance);
-            
+
             ctx.fillStyle = "rgba(0,0,0,0.5)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#fff";
             ctx.font = "36px Arial";
-            ctx.fillText(Math.floor(distance) + " km:",  + region, 120, 120);
+
+            ctx.fillText(
+                Math.floor(distance) + " km, " + region,
+                120,
+                120
+            );
 
             ctx.font = "20px Arial";
             ctx.fillText("Press SPACE to Restart", 200, 160);
             return;
         }
+
 
         // PLAYER (silhouette swap)
         //const flightBob = Math.sin(distance * 2) * 2;
