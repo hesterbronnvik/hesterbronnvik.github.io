@@ -40,7 +40,7 @@ const bg = {
     desert: new Image()
 };
 
-bg.farmland.src = "images/bg_farmland_2.png";
+bg.farmland.src = "images/bg_farmland_3.png";
 bg.mountains.src = "images/bg_mountains_2.png";
 bg.sea.src = "images/bg_sea_2.png";
 bg.desert.src = "images/bg_desert_2.png";
