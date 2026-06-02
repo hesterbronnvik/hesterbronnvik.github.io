@@ -72,18 +72,31 @@ let difficulty = 1;
 // BIOMES
 //
 
-const biomeRoute = [
-    { name: "farmland", length: 150 },
-    { name: "mountains", length: 150 },
-    { name: "farmland", length: 500 },
-    { name: "mountains", length: 150 },
-    { name: "farmland", length: 500 },
-    { name: "sea", length: 140 },
-    { name: "desert", length: 2910 }
-];
+//const biomeRoute = [
+//    { name: "farmland", length: 150 },
+//    { name: "mountains", length: 150 },
+//    { name: "farmland", length: 500 },
+//   { name: "mountains", length: 150 },
+//    { name: "farmland", length: 500 },
+//    { name: "sea", length: 140 },
+//    { name: "desert", length: 2910 }
+//];
 
-let biomeIndex = 0;
-let biomeProgress = 0;
+//let biomeIndex = 0;
+//let biomeProgress = 0;
+
+    const biomeMap = [
+    { biome: "farmland", min: 0, max: 150 },
+    { biome: "mountains", min: 150, max: 350 },
+    { biome: "farmland", min: 350, max: 750 },
+    { biome: "mountains", min: 750, max: 850 },
+    { biome: "farmland", min: 850, max: 1750 },
+    { biome: "sea", min: 1750, max: 1850 },
+    { biome: "farmland", min: 1850, max: 1100 },
+    { biome: "mountains", min: 1100, max: 1400 },
+    { biome: "desert", min: 1400, max: 4400 },
+    { biome: "farmland", min: 4400, max: 4500 }
+];
 
 //
 // PLAYER
@@ -206,10 +219,20 @@ document.addEventListener("keydown", e => {
 // BIOME HELPER
 //
 
-function currentBiome() {
-    return biomeRoute[biomeIndex].name;
-}
+//function currentBiome() {
+//    return biomeRoute[biomeIndex].name;
+//}
 
+    function currentBiome() {
+
+        for (const b of biomeMap) {
+            if (distance >= b.min && distance < b.max) {
+                return b.biome;
+            }
+        }
+
+        return "desert";
+    }
 //
 // REGION TEXT
 //
@@ -672,20 +695,20 @@ function update() {
     // BIOME PROGRESSION
     //
 
-    biomeProgress += distanceSpeed;
+    //biomeProgress += distanceSpeed;
 
-    if (
-        biomeProgress >
-        biomeRoute[biomeIndex].length
-    ) {
+    //if (
+    //    biomeProgress >
+    //    biomeRoute[biomeIndex].length
+    //) {
 
-        biomeProgress = 0;
+    //    biomeProgress = 0;
 
-        biomeIndex = Math.min(
-            biomeIndex + 1,
-            biomeRoute.length - 1
-        );
-    }
+    //    biomeIndex = Math.min(
+    //        biomeIndex + 1,
+    //        biomeRoute.length - 1
+    //    );
+    //}
 
     //
     // FLIGHT MODEL
