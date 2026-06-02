@@ -364,6 +364,11 @@ function spawnFood() {
 
 function spawnThermal() {
 
+    
+    if (currentBiome() === "sea") {
+        return;
+    }
+
     thermals.push({
 
         x: cameraX + canvas.width + 100,
@@ -379,6 +384,11 @@ function spawnThermal() {
 
 function spawnPowerline() {
 
+    
+    if (currentBiome() === "sea") {
+        return;
+    }
+    
     const groundY = canvas.height - 20;
 
     hazards.push({
