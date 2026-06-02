@@ -390,15 +390,11 @@ function spawnThermal() {
 
 function getHazardSprite() {
 
-    if (distance < 950) {
+    if (distance < 850) {
         return "car";
     }
 
-    if (distance < 1450) {
-        return "cablecar";
-    }
-
-    if (distance < 2650) {
+    if (distance > 2400 & distance < 4400) {
         return "sand";
     }
 
