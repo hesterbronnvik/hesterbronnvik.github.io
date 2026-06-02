@@ -1090,11 +1090,11 @@ function drawGameOver() {
     ctx.fillText(outcome.title, 220, 90);
 
     ctx.font = "20px Arial";
-    ctx.fillText(
-        Math.floor(distance) + " km",
-        320,
-        130
-    );
+    
+    const km = Math.floor(distance);
+    const region = getRegion(distance);
+
+    ctx.fillText(`${km} km — ${region}`, 220, 130);
 
     ctx.fillText(
         outcome.text,
@@ -1122,11 +1122,11 @@ function drawVictory() {
     ctx.fillText(outcome.title, 250, 90);
 
     ctx.font = "20px Arial";
-    ctx.fillText(
-        Math.floor(distance) + " km",
-        320,
-        130
-    );
+
+    const km = Math.floor(distance);
+    const region = getRegion(distance);
+
+    ctx.fillText(`${km} km — ${region}`, 220, 130);
 
     ctx.fillText(
         outcome.text,
