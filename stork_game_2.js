@@ -29,6 +29,12 @@ insectImg.src = "images/insect8bit.png";
 const thermalImg = new Image();
 thermalImg.src = "images/thermal8bit2.png";
 
+const carImg = new Image();
+carImg.src = "car8bit.png";
+
+const sandImg = new Image();
+sandImg.src = "sand8bit.png";
+
 //
 // BACKGROUNDS
 //
@@ -382,6 +388,23 @@ function spawnThermal() {
     });
 }
 
+function getHazardSprite() {
+
+    if (distance < 950) {
+        return "car";
+    }
+
+    if (distance < 1450) {
+        return "cablecar";
+    }
+
+    if (distance < 2650) {
+        return "sand";
+    }
+
+    return "powerline";
+}
+    
 function spawnPowerline() {
 
     
@@ -393,7 +416,9 @@ function spawnPowerline() {
 
     hazards.push({
 
-        type: "powerline",
+        type: "hazard",
+    
+        appearance: getHazardSprite(),
 
         x: cameraX + canvas.width + 100,
 
@@ -974,14 +999,22 @@ function drawHazards() {
         
             const x = h.x - cameraX;
         
+            let sprite = powerlineImg;
+            
+            if (h.appearance === "car") {
+                sprite = carImg;
+            }
+            else if (h.appearance === "sand") {
+                sprite = sandImg;
+            }
+            
             ctx.drawImage(
-                powerlineImg,
+                sprite,
                 x,
-                h.y - h.height, // draw upward from base
+                h.y - h.height,
                 h.width,
                 h.height
             );
-        }
 
         if (h.type === "storm") {
 
