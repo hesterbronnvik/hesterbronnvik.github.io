@@ -151,6 +151,11 @@ let foodTimer = 0;
 let thermalTimer = 0;
 let thermalBoostTimer = 0;
 
+const hazardSprites = {
+    powerline: { img: powerlineImg, w: 90, h: 120 },
+    car:       { img: carImg,       w: 90, h: 50  },
+    sand:      { img: sandImg,      w: 90, h: 120  }
+};
 //
 // WEATHER
 //
@@ -1002,12 +1007,14 @@ function drawHazards() {
                 sprite = sandImg;
             }
 
+            const data = hazardSprites[h.appearance] || hazardSprites.powerline;
+            
             ctx.drawImage(
-                sprite,
+                data.img,
                 x,
-                h.y - h.height,
-                h.width,
-                h.height
+                h.y - data.h,
+                data.w,
+                data.h
             );
         }
 
