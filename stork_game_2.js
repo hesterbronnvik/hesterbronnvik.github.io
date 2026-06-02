@@ -30,7 +30,7 @@ const thermalImg = new Image();
 thermalImg.src = "images/thermal8bit2.png";
 
 const carImg = new Image();
-carImg.src = "images/car8bit.png";
+carImg.src = "images/tree8bit.png";
 
 const sandImg = new Image();
 sandImg.src = "images/sand8bit.png";
@@ -153,7 +153,7 @@ let thermalBoostTimer = 0;
 
 const hazardSprites = {
     powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
-    car:       { img: carImg,       w: 70, h: 40,  hitW: 60, hitH: 30 },
+    car:       { img: carImg,       w: 90, h: 120,  hitW: 80, hitH: 110 },
     sand:      { img: sandImg,      w: 90, h: 120,  hitW: 80, hitH: 110 }
 };
     
