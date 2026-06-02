@@ -273,7 +273,7 @@ function getOutcome(distance) {
         };
     }
 
-    if (distance <= 1400) {
+    if (distance <= 2400) {
 
         return {
             type: "PARTIAL_SUCCESS",
