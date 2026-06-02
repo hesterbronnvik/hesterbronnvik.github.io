@@ -9,25 +9,25 @@ const scoreEl = document.getElementById("score");
 //
 
 const storkImg = new Image();
-storkImg.src = "stork8bit.png";
+storkImg.src = "images/stork8bit.png";
 
 const powerlineImg = new Image();
-powerlineImg.src = "pylon8bit.png";
+powerlineImg.src = "images/pylon8bit.png";
 
 const stormImg = new Image();
-stormImg.src = "storm8bit.png";
+stormImg.src = "images/storm8bit.png";
 
 const wormImg = new Image();
-wormImg.src = "worm8bit.png";
+wormImg.src = "images/worm8bit.png";
 
 const fishImg = new Image();
-fishImg.src = "fish8bit.png";
+fishImg.src = "images/fish8bit.png";
 
 const insectImg = new Image();
-insectImg.src = "insect8bit.png";
+insectImg.src = "images/insect8bit.png";
 
 const thermalImg = new Image();
-thermalImg.src = "thermal8bit.png";
+thermalImg.src = "images/thermal8bit.png";
 
 //
 // BACKGROUNDS
@@ -40,10 +40,10 @@ const bg = {
     desert: new Image()
 };
 
-bg.farmland.src = "bg_farmland_2.png";
-bg.mountains.src = "bg_mountains_2.png";
-bg.sea.src = "bg_sea_2.png";
-bg.desert.src = "bg_desert_2.png";
+bg.farmland.src = "images/bg_farmland_2.png";
+bg.mountains.src = "images/bg_mountains_2.png";
+bg.sea.src = "images/bg_sea_2.png";
+bg.desert.src = "images/bg_desert_2.png";
 
 //
 // GAME STATES
