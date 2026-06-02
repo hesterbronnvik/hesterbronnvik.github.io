@@ -30,10 +30,10 @@ const thermalImg = new Image();
 thermalImg.src = "images/thermal8bit2.png";
 
 const carImg = new Image();
-carImg.src = "car8bit.png";
+carImg.src = "images/car8bit.png";
 
 const sandImg = new Image();
-sandImg.src = "sand8bit.png";
+sandImg.src = "images/sand8bit.png";
 
 //
 // BACKGROUNDS
