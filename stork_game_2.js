@@ -1045,7 +1045,7 @@ function drawStartScreen() {
 
     ctx.font = "28px Arial";
     ctx.fillText(
-        "White Stork Migration",
+        "Time to migrate.",
         230,
         90
     );
@@ -1053,25 +1053,25 @@ function drawStartScreen() {
     ctx.font = "18px Arial";
 
     ctx.fillText(
-        "Press SPACE to begin",
-        290,
+        "Press SPACE or UP to begin",
+        230,
         130
     );
 
     ctx.fillText(
-        "Collect food and thermals",
+        "Food and thermals restore energy reserves.",
         250,
         165
     );
 
     ctx.fillText(
-        "Avoid storms and power lines",
+        "Storms drain energy and pylons are deadly.",
         235,
         195
     );
 
     ctx.fillText(
-        "Reach 4500 km",
+        "Can you travel 4500 km to the ancestral wintering grounds?",
         320,
         225
     );
