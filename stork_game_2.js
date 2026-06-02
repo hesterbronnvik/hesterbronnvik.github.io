@@ -660,7 +660,9 @@ function update() {
 
     cameraX += 5 * difficulty;
 
-    distance += distanceSpeed;
+    const kmMultiplier = 4;
+
+    distance += distanceSpeed * kmMultiplier;
 
     scoreEl.textContent =
         Math.floor(distance) + " km";
