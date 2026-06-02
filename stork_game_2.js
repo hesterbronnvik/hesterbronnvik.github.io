@@ -160,12 +160,10 @@ let milestoneTimer = 0;
 
 const milestones = [
     { km: 150, text: "Reached the Alps" },
-    { km: 800, text: "Reached France" },
+    { km: 300, text: "Reached France" },
     { km: 950, text: "Crossed the Pyrenees" },
-    { km: 1450, text: "Reached Iberia" },
-    { km: 1590, text: "Crossed the Mediterranean" },
-    { km: 2590, text: "Reached North Africa" },
-    { km: 3590, text: "Reached the Sahel" }
+    { km: 1800, text: "Crossed the Mediterranean" },
+    { km: 4200, text: "Reached the Sahel" }
 ];
 
 let milestoneIndex = 0;
