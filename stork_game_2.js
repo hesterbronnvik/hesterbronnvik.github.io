@@ -1171,8 +1171,7 @@ function drawVictory() {
 
 function draw() {
 
-    const biome =
-        biomeRoute[biomeIndex].name;
+   const biome = currentBiome();
 
     drawBiome(biome);
 
