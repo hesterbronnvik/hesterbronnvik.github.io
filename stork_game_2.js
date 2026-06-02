@@ -27,7 +27,7 @@ const insectImg = new Image();
 insectImg.src = "images/insect8bit.png";
 
 const thermalImg = new Image();
-thermalImg.src = "images/thermal8bit.png";
+thermalImg.src = "images/thermal8bit2.png";
 
 //
 // BACKGROUNDS
