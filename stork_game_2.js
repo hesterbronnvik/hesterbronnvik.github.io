@@ -369,8 +369,8 @@ function spawnThermal() {
 
         y: 60 + Math.random() * 120,
 
-        width: 40,
-        height: 60,
+        width: 50,
+        height: 50,
 
         energy: 15
     });
