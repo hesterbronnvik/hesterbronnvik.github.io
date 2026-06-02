@@ -154,7 +154,7 @@ let thermalBoostTimer = 0;
 const hazardSprites = {
     powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
     car:       { img: carImg,       w: 70, h: 40,  hitW: 60, hitH: 30 },
-    sand:      { img: sandImg,      w: 90, h: 60,  hitW: 80, hitH: 50 }
+    sand:      { img: sandImg,      w: 90, h: 120,  hitW: 80, hitH: 110 }
 };
     
 //
