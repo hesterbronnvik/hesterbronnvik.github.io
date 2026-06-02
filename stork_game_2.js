@@ -358,11 +358,14 @@ function spawnFood() {
     if (biome === "sea") sprite = fishImg;
     if (biome === "desert") sprite = insectImg;
 
+    const groundY = canvas.height - 55;
+
     foods.push({
 
         x: cameraX + canvas.width + 100,
 
-        y: 40 + Math.random() * 140,
+        // anchor to ground with small variation
+        y: groundY - (10 + Math.random() * 8),
 
         width: 26,
         height: 26,
