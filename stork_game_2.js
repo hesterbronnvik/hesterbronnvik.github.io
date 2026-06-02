@@ -173,10 +173,11 @@ let milestoneTimer = 0;
 
 const milestones = [
     { km: 150, text: "Reached the Alps" },
-    { km: 300, text: "Reached France" },
-    { km: 950, text: "Crossed the Pyrenees" },
-    { km: 1800, text: "Crossed the Mediterranean" },
-    { km: 4200, text: "Reached the Sahel" }
+    { km: 350, text: "Reached France" },
+    { km: 850, text: "Crossed the Pyrenees" },
+    { km: 1850, text: "Crossed the Mediterranean" },
+    { km: 1400, text: "Crossed the Atlas Mountains" },
+    { km: 4400, text: "Reached the Sahel" }
 ];
 
 let milestoneIndex = 0;
@@ -240,13 +241,13 @@ document.addEventListener("keydown", e => {
 function getRegion(km) {
 
     if (km < 150) return "Central Europe";
-    if (km < 300) return "The Alps";
-    if (km < 800) return "France";
-    if (km < 950) return "The Pyrenees";
-    if (km < 1450) return "Iberia";
-    if (km < 1590) return "Mediterranean Sea";
-    if (km < 2590) return "North Africa";
-    if (km < 3590) return "The Sahel";
+    if (km < 350) return "The Alps";
+    if (km < 750) return "France";
+    if (km < 850) return "The Pyrenees";
+    if (km < 1750) return "Iberia";
+    if (km < 1850) return "Mediterranean Sea";
+    if (km < 4400) return "North Africa";
+    if (km < 4500) return "The Sahel";
 
     return "African Wintering Grounds";
 }
@@ -265,7 +266,7 @@ function getOutcome(distance) {
         };
     }
 
-    if (distance <= 2650) {
+    if (distance <= 1400) {
 
         return {
             type: "PARTIAL_SUCCESS",
@@ -274,7 +275,7 @@ function getOutcome(distance) {
         };
     }
 
-    if (distance <= 4000) {
+    if (distance <= 4400) {
 
         return {
             type: "FAIL_DEEP_SOUTH",
