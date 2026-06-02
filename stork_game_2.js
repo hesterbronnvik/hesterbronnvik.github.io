@@ -1047,33 +1047,33 @@ function drawStartScreen() {
     ctx.fillText(
         "Time to migrate.",
         230,
-        90
+        195
     );
 
     ctx.font = "18px Arial";
 
     ctx.fillText(
-        "Press SPACE or UP to begin",
+        "Press SPACE or UP to begin.",
         230,
         130
     );
 
     ctx.fillText(
-        "Food and thermals restore energy reserves.",
-        250,
+        "Food and thermals restore energy.",
+        230,
+        130
+    );
+
+    ctx.fillText(
+        "Storms drain energy. Pylons are deadly.",
+        230,
         165
     );
 
     ctx.fillText(
-        "Storms drain energy and pylons are deadly.",
-        235,
-        195
-    );
-
-    ctx.fillText(
         "Can you travel 4500 km to the ancestral wintering grounds?",
-        320,
-        225
+        230,
+        90
     );
 }
 
