@@ -317,16 +317,20 @@ function spawnThermal() {
 
 function spawnPowerline() {
 
+    const groundY = canvas.height - 20;
+
     hazards.push({
 
         type: "powerline",
 
         x: cameraX + canvas.width + 100,
 
-        y: 180,
+        y: groundY, // anchor point at ground
 
         width: 90,
-        height: 50
+
+        height: 120 // tall structure
+
     });
 }
 
@@ -549,10 +553,10 @@ function updateCollisions() {
     for (const h of hazards) {
 
         const box = {
-
+        
             x: h.x - cameraX,
-            y: h.y,
-
+            y: h.y - h.height, // top of structure
+        
             width: h.width,
             height: h.height
         };
@@ -891,13 +895,15 @@ function drawHazards() {
         const x = h.x - cameraX;
 
         if (h.type === "powerline") {
-
+        
+            const x = h.x - cameraX;
+        
             ctx.drawImage(
                 powerlineImg,
                 x,
-                h.y - 60,
+                h.y - h.height, // draw upward from base
                 h.width,
-                90
+                h.height
             );
         }
 
