@@ -416,7 +416,7 @@ function spawnPowerline() {
 
     hazards.push({
 
-        type: "hazard",
+        type: "powerline",
     
         appearance: getHazardSprite(),
 
@@ -996,18 +996,16 @@ function drawHazards() {
         const x = h.x - cameraX;
 
         if (h.type === "powerline") {
-        
-            const x = h.x - cameraX;
-        
+
             let sprite = powerlineImg;
-            
+
             if (h.appearance === "car") {
                 sprite = carImg;
             }
             else if (h.appearance === "sand") {
                 sprite = sandImg;
             }
-            
+
             ctx.drawImage(
                 sprite,
                 x,
@@ -1015,6 +1013,7 @@ function drawHazards() {
                 h.width,
                 h.height
             );
+        }
 
         if (h.type === "storm") {
 
