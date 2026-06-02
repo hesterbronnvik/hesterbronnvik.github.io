@@ -143,6 +143,7 @@ let thermals = [];
 let hazardTimer = 0;
 let foodTimer = 0;
 let thermalTimer = 0;
+let thermalBoostTimer = 0;
 
 //
 // WEATHER
@@ -594,13 +595,15 @@ function updateCollisions() {
         };
 
         if (intersects(p, box)) {
-
+        
             player.energy += thermal.energy;
-
+        
             if (player.energy > player.maxEnergy) {
                 player.energy = player.maxEnergy;
             }
-
+        
+            thermalBoostTimer = 180;
+        
             return false;
         }
 
