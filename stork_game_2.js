@@ -92,9 +92,9 @@ let difficulty = 1;
     { biome: "mountains", min: 750, max: 850 },
     { biome: "farmland", min: 850, max: 1750 },
     { biome: "sea", min: 1750, max: 1850 },
-    { biome: "farmland", min: 1850, max: 1100 },
-    { biome: "mountains", min: 1100, max: 1400 },
-    { biome: "desert", min: 1400, max: 4400 },
+    { biome: "farmland", min: 1850, max: 2100 },
+    { biome: "mountains", min: 2100, max: 2400 },
+    { biome: "desert", min: 2400, max: 4400 },
     { biome: "farmland", min: 4400, max: 4500 }
 ];
 
@@ -176,7 +176,7 @@ const milestones = [
     { km: 350, text: "Reached France" },
     { km: 850, text: "Crossed the Pyrenees" },
     { km: 1850, text: "Crossed the Mediterranean" },
-    { km: 1400, text: "Crossed the Atlas Mountains" },
+    { km: 2400, text: "Crossed the Atlas Mountains" },
     { km: 4400, text: "Reached the Sahel" }
 ];
 
