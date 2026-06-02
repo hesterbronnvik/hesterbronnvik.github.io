@@ -1047,7 +1047,7 @@ function drawStartScreen() {
     ctx.fillText(
         "Time to migrate.",
         230,
-        195
+        90
     );
 
     ctx.font = "18px Arial";
@@ -1055,25 +1055,25 @@ function drawStartScreen() {
     ctx.fillText(
         "Press SPACE or UP to begin.",
         230,
-        130
+        230
     );
 
     ctx.fillText(
         "Food and thermals restore energy.",
         230,
-        130
+        165
     );
 
     ctx.fillText(
         "Storms drain energy. Pylons are deadly.",
         230,
-        165
+        200
     );
 
     ctx.fillText(
         "Can you travel 4500 km to the ancestral wintering grounds?",
         230,
-        90
+        130
     );
 }
 
