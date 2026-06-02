@@ -201,17 +201,6 @@ let milestoneIndex = 0;
 
 function flap() {
 
-    if (gameState === STATE.START) {
-        gameState = STATE.PLAYING;
-        return;
-    }
-
-    if (gameState === STATE.GAMEOVER ||
-        gameState === STATE.VICTORY) {
-        restart();
-        return;
-    }
-
     player.velocityY += flapStrength;
 
     if (player.velocityY < maxRise) {
@@ -221,12 +210,25 @@ function flap() {
 
 document.addEventListener("keydown", e => {
 
-    if (e.code !== "Space" &&
-        e.code !== "ArrowUp") return;
+    if (e.code !== "Space" && e.code !== "ArrowUp") return;
 
     e.preventDefault();
 
-    flap();
+    // START / RESTART ONLY
+    if (gameState === STATE.START) {
+        gameState = STATE.PLAYING;
+        return;
+    }
+
+    if (gameState === STATE.GAMEOVER || gameState === STATE.VICTORY) {
+        restart();
+        return;
+    }
+
+    // FLAP ONLY DURING GAMEPLAY
+    if (gameState === STATE.PLAYING) {
+        flap();
+    }
 });
 
 //
