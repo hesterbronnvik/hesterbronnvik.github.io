@@ -152,10 +152,11 @@ let thermalTimer = 0;
 let thermalBoostTimer = 0;
 
 const hazardSprites = {
-    powerline: { img: powerlineImg, w: 90, h: 120 },
-    car:       { img: carImg,       w: 90, h: 50  },
-    sand:      { img: sandImg,      w: 90, h: 120  }
+    powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
+    car:       { img: carImg,       w: 70, h: 40,  hitW: 60, hitH: 30 },
+    sand:      { img: sandImg,      w: 90, h: 60,  hitW: 80, hitH: 50 }
 };
+    
 //
 // WEATHER
 //
@@ -246,6 +247,24 @@ document.addEventListener("keydown", e => {
 
         return "desert";
     }
+
+// float in lift
+    function inThermal(thermal, p) {
+
+            const cx = thermal.x - cameraX + thermal.width / 2;
+            const cy = thermal.y + thermal.height / 2;
+        
+            const px = p.x + p.width / 2;
+            const py = p.y + p.height / 2;
+        
+            const dx = px - cx;
+            const dy = py - cy;
+        
+            const dist = Math.sqrt(dx * dx + dy * dy);
+        
+            return dist < 70; // lift radius
+        }
+    
 //
 // REGION TEXT
 //
@@ -655,13 +674,18 @@ function updateCollisions() {
 
     for (const h of hazards) {
 
+        const sprite = hazardSprites[h.appearance] || hazardSprites.powerline;
+        
         const box = {
         
-            x: h.x - cameraX,
-            y: h.y - h.height, // top of structure
+            x: h.x - cameraX + (h.width - sprite.hitW) / 2,
         
-            width: h.width,
-            height: h.height
+            y: (h.type === "powerline")
+                ? (canvas.height - 20 - sprite.hitH)
+                : (h.y - sprite.hitH),
+        
+            width: sprite.hitW,
+            height: sprite.hitH
         };
 
         if (!intersects(p, box)) continue;
@@ -757,12 +781,47 @@ function update() {
     // FLIGHT MODEL
     //
 
-    player.velocityY += sinkRate;
+  //
+// FLIGHT MODEL (with thermals)
+//
 
-    if (player.velocityY > maxSink) {
-        player.velocityY = maxSink;
+    let lift = false;
+    
+    const p = playerBox();
+    
+    for (const t of thermals) {
+    
+        const box = {
+            x: t.x - cameraX,
+            y: t.y,
+            width: t.width,
+            height: t.height
+        };
+    
+        if (intersects(p, box)) {
+            lift = true;
+            break;
+        }
     }
-
+    
+    if (lift) {
+    
+        // thermal lift reduces sinking and adds upward bias
+        player.velocityY -= 0.08;
+    
+        if (player.velocityY < -1.5) {
+            player.velocityY = -1.5;
+        }
+    
+    } else {
+    
+        player.velocityY += sinkRate;
+    
+        if (player.velocityY > maxSink) {
+            player.velocityY = maxSink;
+        }
+    }
+    
     player.y += player.velocityY;
 
     //
