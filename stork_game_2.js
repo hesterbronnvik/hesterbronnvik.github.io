@@ -231,6 +231,45 @@ function getRegion(km) {
 }
 
 //
+// END MESSAGES
+//
+function getOutcome(distance) {
+
+    if (distance < 650) {
+
+        return {
+            type: "FAIL",
+            title: "Migration unsuccessful",
+            text: "You did not reach the wintering grounds."
+        };
+    }
+
+    if (distance <= 2650) {
+
+        return {
+            type: "PARTIAL_SUCCESS",
+            title: "Partial success",
+            text: "You can overwinter here."
+        };
+    }
+
+    if (distance <= 4000) {
+
+        return {
+            type: "FAIL_DEEP_SOUTH",
+            title: "Migration failed",
+            text: "You died in the desert."
+        };
+    }
+
+    return {
+        type: "VICTORY",
+        title: "Victory!",
+        text: "You reached the ancestral wintering grounds."
+    };
+}
+    
+//
 // RESTART
 //
 
@@ -716,10 +755,10 @@ function update() {
     // WIN CONDITION
     //
 
-    if (distance >= WIN_DISTANCE) {
+    //if (distance >= WIN_DISTANCE) {
 
-        gameState = STATE.VICTORY;
-    }
+    //    gameState = STATE.VICTORY;
+    //}
 }
 
     //---------------
@@ -1040,83 +1079,65 @@ function drawStartScreen() {
 
 function drawGameOver() {
 
-    ctx.fillStyle =
-        "rgba(0,0,0,0.65)";
+    const outcome = getOutcome(distance);
 
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    ctx.fillStyle = "rgba(0,0,0,0.65)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#FFF";
 
     ctx.font = "34px Arial";
-
-    ctx.fillText(
-        "Migration Failed",
-        260,
-        90
-    );
+    ctx.fillText(outcome.title, 220, 90);
 
     ctx.font = "20px Arial";
-
     ctx.fillText(
-        Math.floor(distance) +
-        " km — " +
-        getRegion(distance),
-        220,
+        Math.floor(distance) + " km",
+        320,
         130
     );
 
     ctx.fillText(
-        "Press SPACE to try again",
-        250,
-        180
-    );
-}
-
-function drawVictory() {
-
-    ctx.fillStyle =
-        "rgba(0,0,0,0.65)";
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    ctx.fillStyle = "#FFF";
-
-    ctx.font = "34px Arial";
-
-    ctx.fillText(
-        "Migration Complete!",
-        220,
-        90
-    );
-
-    ctx.font = "20px Arial";
-
-    ctx.fillText(
-        "You reached the African wintering grounds.",
-        150,
-        140
-    );
-
-    ctx.fillText(
-        Math.floor(distance) + " km travelled",
-        270,
-        175
+        outcome.text,
+        200,
+        170
     );
 
     ctx.fillText(
         "Press SPACE to migrate again",
-        235,
-        215
+        240,
+        220
+    );
+}
+    
+function drawVictory() {
+
+    const outcome = getOutcome(distance);
+
+    ctx.fillStyle = "rgba(0,0,0,0.65)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#FFF";
+
+    ctx.font = "34px Arial";
+    ctx.fillText(outcome.title, 250, 90);
+
+    ctx.font = "20px Arial";
+    ctx.fillText(
+        Math.floor(distance) + " km",
+        320,
+        130
+    );
+
+    ctx.fillText(
+        outcome.text,
+        140,
+        170
+    );
+
+    ctx.fillText(
+        "Press SPACE to migrate again",
+        240,
+        220
     );
 }
 
