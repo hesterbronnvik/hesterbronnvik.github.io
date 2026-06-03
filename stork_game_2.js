@@ -1427,7 +1427,7 @@ function draw() {
     ctx.textAlign = "center";
 
     ctx.fillText(
-        "Flying with a flock",
+        "Flying with a flock! Safe from collisions.",
         canvas.width / 2,
         30
     );
