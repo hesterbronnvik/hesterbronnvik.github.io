@@ -145,11 +145,16 @@ const distanceSpeed = 0.08;
 let hazards = [];
 let foods = [];
 let thermals = [];
+let flocks = [];
 
 let hazardTimer = 0;
 let foodTimer = 0;
 let thermalTimer = 0;
 let thermalBoostTimer = 0;
+
+let flockTimer = 0;
+let flockActive = false;
+let flockProtectionTimer = 0;
 
 const hazardSprites = {
     powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
@@ -429,7 +434,20 @@ function spawnThermal() {
         energy: 15
     });
 }
+    
+function spawnFlock() {
 
+    flocks.push({
+
+        x: cameraX + canvas.width + 100,
+
+        y: 80 + Math.random() * 100,
+
+        width: 80,
+        height: 50
+    });
+}
+    
 function getHazardSprite() {
 
     if (distance < 850) {
@@ -497,11 +515,21 @@ function updateSpawning() {
     hazardTimer++;
     foodTimer++;
     thermalTimer++;
+    flockTimer++;
 
     let hazardInterval = 120;
     let foodInterval = 180;
     let thermalInterval = 280;
 
+    if (flockTimer > 1000) {
+    
+        if (Math.random() < 0.3) {
+            spawnFlock();
+        }
+    
+        flockTimer = 0;
+    }
+    
     if (biome === "mountains") {
 
         thermalInterval = 180;
@@ -723,6 +751,32 @@ function updateCollisions() {
         }
 
         //
+        // FLOCKS
+        //
+
+        flocks = flocks.filter(flock => {
+    
+            const box = {
+        
+                x: flock.x - cameraX,
+                y: flock.y,
+        
+                width: flock.width,
+                height: flock.height
+            };
+        
+            if (intersects(playerBox(), box)) {
+        
+                flockActive = true;
+                flockProtectionTimer = 600;
+        
+                return false;
+            }
+        
+            return true;
+    });
+        
+        //
         // STORMS = ENERGY LOSS
         //
 
@@ -799,9 +853,14 @@ function update() {
     //    );
     //}
 
-    //
-    // FLIGHT MODEL
-    //
+    if (flockActive) {
+    
+        flockProtectionTimer--;
+    
+        if (flockProtectionTimer <= 0) {
+            flockActive = false;
+        }
+    }
 
   //
 // FLIGHT MODEL (with thermals)
@@ -892,6 +951,10 @@ function update() {
         hazards.filter(
             h => h.x - cameraX > -150
         );
+    flocks =
+    flocks.filter(
+        f => f.x - cameraX > -100
+    );
 
     updateSpawning();
     updateWeather();
@@ -1030,6 +1093,25 @@ function drawMilestone() {
 // RESOURCES
 //
 
+function drawFlocks() {
+
+    for (const flock of flocks) {
+
+        const x = flock.x - cameraX;
+
+        for (let i = 0; i < 4; i++) {
+
+            ctx.drawImage(
+                storkImg,
+                x - i * 25,
+                flock.y + (i % 2) * 10,
+                30,
+                30
+            );
+        }
+    }
+}
+    
 function drawFoods() {
 
     for (const food of foods) {
@@ -1124,6 +1206,12 @@ function drawPlayer() {
     const bob =
         Math.sin(distance * 1.2) * 1.5;
 
+    if (flockActive) {
+
+        ctx.shadowColor = "#FFD700";
+        ctx.shadowBlur = 12;
+    }
+
     ctx.drawImage(
         storkImg,
         player.x,
@@ -1131,8 +1219,44 @@ function drawPlayer() {
         player.width,
         player.height
     );
+
+    ctx.shadowBlur = 0;
 }
 
+//
+// FLOCK
+//
+function drawEscortFlock() {
+
+    if (!flockActive) return;
+
+    const escorts = [
+
+        { x: -55, y: -20 },
+        { x: -85, y: 10 },
+        { x: -120, y: -5 },
+        { x: -150, y: 20 }
+
+    ];
+
+    const flapOffset = Math.sin(Date.now() * 0.01) * 3;
+
+    for (const bird of escorts) {
+
+        ctx.globalAlpha = 0.8;
+
+        ctx.drawImage(
+            storkImg,
+            player.x + bird.x,
+            player.y + bird.y + flapOffset,
+            34,
+            34
+        );
+    }
+
+    ctx.globalAlpha = 1;
+}
+    
 //
 // WEATHER EFFECTS
 //
@@ -1316,6 +1440,9 @@ function draw() {
     drawFoods();
     drawThermals();
     drawHazards();
+    
+    drawEscortFlock();
+    
     drawPlayer();
 
     drawWeatherEffects();
@@ -1335,6 +1462,21 @@ function draw() {
         65
     );
 
+    if (flockActive) {
+
+    ctx.fillStyle = "#FFD700";
+    ctx.font = "18px Arial";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "Flying with a flock",
+        canvas.width / 2,
+        30
+    );
+
+    ctx.textAlign = "left";
+}
+    
     if (gameState === STATE.START) {
         drawStartScreen();
     }
