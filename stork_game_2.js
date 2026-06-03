@@ -360,6 +360,10 @@ function restart() {
     hazards = [];
     foods = [];
     thermals = [];
+    flocks = [];
+    flockActive = false;
+    flockProtectionTimer = 0;
+    flockTimer = 0;
 
     hazardTimer = 0;
     foodTimer = 0;
@@ -454,7 +458,7 @@ function getHazardSprite() {
         return "car";
     }
 
-    if (distance > 2400 & distance < 4400) {
+    if (distance > 2400 && distance < 4400) {
         return "sand";
     }
 
@@ -745,37 +749,42 @@ function updateCollisions() {
     //
     // HAZARDS
     //
-
+    
     for (const h of hazards) {
-
+    
         const sprite = hazardSprites[h.appearance] || hazardSprites.powerline;
-        
+    
         const box = {
-        
+    
             x: h.x - cameraX + (h.width - sprite.hitW) / 2,
-        
+    
             y: (h.type === "powerline")
                 ? (canvas.height - 20 - sprite.hitH)
                 : (h.y - sprite.hitH),
-        
+    
             width: sprite.hitW,
             height: sprite.hitH
         };
-
+    
         if (!intersects(p, box)) continue;
-
-        //
-        // POWERLINES = DEATH
-        //
-
+    
         if (h.type === "powerline") {
-
+    
             gameState = STATE.GAMEOVER;
             return;
         }
-        
-            return true;
-    });
+    
+        if (h.type === "storm" && !h.hit) {
+    
+            player.energy -= h.damage;
+    
+            h.hit = true;
+    
+            if (player.energy < 0) {
+                player.energy = 0;
+            }
+        }
+    }
         
         //
         // STORMS = ENERGY LOSS
