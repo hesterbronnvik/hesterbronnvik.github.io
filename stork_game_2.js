@@ -151,10 +151,6 @@ let foodTimer = 0;
 let thermalTimer = 0;
 let thermalBoostTimer = 0;
 
-let flockActive = false;
-let flockTimer = 0;
-let flockSpawnTimer = 0;
-
 const hazardSprites = {
     powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
     car:       { img: carImg,       w: 90, h: 120,  hitW: 80, hitH: 110 },
@@ -177,43 +173,6 @@ let lightningTimer = 0;
 
 let fogAlpha = 0;
 
-//
-// FLOCKS
-//
-    function spawnFlock() {
-
-    flockActive = true;
-
-    // 10 seconds at 60 FPS
-    flockTimer = 600;
-}
-  function drawFlock() {
-
-    if (!flockActive) return;
-
-    const birds = [
-
-        { x: -60, y: -25 },
-        { x: -90, y: 10 },
-        { x: -120, y: -10 },
-        { x: -150, y: 20 }
-    ];
-
-    for (const b of birds) {
-
-        ctx.globalAlpha = 0.8;
-
-        ctx.drawImage(
-            storkImg,
-            player.x + b.x,
-            player.y + b.y,
-            34,
-            34
-        );
-    }
-
-    ctx.globalAlpha = 1;
-}  
 //
 // UI
 //
@@ -538,7 +497,6 @@ function updateSpawning() {
     hazardTimer++;
     foodTimer++;
     thermalTimer++;
-    flockSpawnTimer++;
 
     let hazardInterval = 120;
     let foodInterval = 180;
@@ -593,15 +551,6 @@ function updateSpawning() {
         spawnThermal();
         thermalTimer = 0;
     }
-
-    if (!flockActive && flockSpawnTimer > 1200) {
-
-    if (Math.random() < 0.03) {
-
-        spawnFlock();
-        flockSpawnTimer = 0;
-    }
-}
 }
 
 //
@@ -768,23 +717,16 @@ function updateCollisions() {
         //
 
         if (h.type === "powerline") {
-        
-            if (!flockActive) {
-        
-                gameState = STATE.GAMEOVER;
-                return;
-            }
+
+            gameState = STATE.GAMEOVER;
+            return;
         }
 
         //
         // STORMS = ENERGY LOSS
         //
 
-        if (
-                h.type === "storm" &&
-                !h.hit &&
-                !flockActive
-            ) {
+        if (h.type === "storm" && !h.hit) {
 
             player.energy -= h.damage;
 
@@ -858,8 +800,12 @@ function update() {
     //}
 
     //
-    // FLIGHT MODEL (with thermals)
+    // FLIGHT MODEL
     //
+
+  //
+// FLIGHT MODEL (with thermals)
+//
 
     let lift = false;
     
@@ -946,15 +892,7 @@ function update() {
         hazards.filter(
             h => h.x - cameraX > -150
         );
-    
-    if (flockActive) {
-    
-        flockTimer--;
-    
-        if (flockTimer <= 0) {
-            flockActive = false;
-        }
-    }
+
     updateSpawning();
     updateWeather();
     updateCollisions();
@@ -1378,9 +1316,6 @@ function draw() {
     drawFoods();
     drawThermals();
     drawHazards();
-    
-    drawFlock();
-    
     drawPlayer();
 
     drawWeatherEffects();
@@ -1404,18 +1339,6 @@ function draw() {
         drawStartScreen();
     }
 
-    if (flockActive) {
-
-    ctx.fillStyle = "#FFD700";
-    ctx.font = "20px Arial";
-
-    ctx.fillText(
-        "Flying with a flock!",
-        canvas.width / 2 - 80,
-        30
-    );
-}    
-    
     if (gameState === STATE.GAMEOVER) {
         drawGameOver();
     }
