@@ -316,7 +316,7 @@ function getOutcome(distance) {
         return {
             type: "FAIL",
             title: "Migration unsuccessful",
-            text: "You did not reach the wintering grounds."
+            text: "You did not reach the wintering grounds and will die in the winter."
         };
     }
 
@@ -325,7 +325,7 @@ function getOutcome(distance) {
         return {
             type: "PARTIAL_SUCCESS",
             title: "Partial success",
-            text: "You can overwinter here."
+            text: "You can overwinter here, but you have to compete and may get poisoned."
         };
     }
 
@@ -333,7 +333,7 @@ function getOutcome(distance) {
 
         return {
             type: "FAIL_DEEP_SOUTH",
-            title: "Migration failed",
+            title: "Migration unsuccessful",
             text: "You died in the desert."
         };
     }
