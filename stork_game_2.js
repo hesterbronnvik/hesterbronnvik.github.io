@@ -1414,15 +1414,9 @@ function drawStartScreen() {
     );
 
     ctx.fillText(
-        "4,500 km from Europe",
+        "to the ancestral wintering grounds?",
         canvas.width / 2,
         225
-    );
-
-    ctx.fillText(
-        "to the African wintering grounds?",
-        canvas.width / 2,
-        260
     );
 
     ctx.font = "28px Arial";
@@ -1430,7 +1424,7 @@ function drawStartScreen() {
     ctx.fillText(
         "Press ENTER to begin",
         canvas.width / 2,
-        360
+        300
     );
 
     ctx.textAlign = "left";
