@@ -658,107 +658,97 @@ function playerBox() {
 // COLLISIONS
 //
 function updateCollisions() {
-
     const p = playerBox();
 
     //
     // FOOD
     //
-    foods = foods.filter(food => {
-        const box = {
+    for (const food of foods) {
+        if (food.consumed) continue;
+
+        if (intersects(p, {
             x: food.x - cameraX,
             y: food.y,
             width: food.width,
             height: food.height
-        };
-
-        if (intersects(p, box)) {
+        })) {
             player.energy += food.energy;
-            if (player.energy > player.maxEnergy) {
-                player.energy = player.maxEnergy;
-            }
-            return false; // remove food that was eaten
+            if (player.energy > player.maxEnergy) player.energy = player.maxEnergy;
+            food.consumed = true; // mark for removal
         }
-
-        return true;
-    });
+    }
 
     //
     // THERMALS
     //
-    thermals = thermals.filter(thermal => {
-        const box = {
+    for (const thermal of thermals) {
+        if (thermal.consumed) continue;
+
+        if (intersects(p, {
             x: thermal.x - cameraX,
             y: thermal.y,
             width: thermal.width,
             height: thermal.height
-        };
-
-        if (intersects(p, box)) {
+        })) {
             player.energy += thermal.energy;
-            if (player.energy > player.maxEnergy) {
-                player.energy = player.maxEnergy;
-            }
+            if (player.energy > player.maxEnergy) player.energy = player.maxEnergy;
             thermalBoostTimer = 180;
-            return false; // remove thermal that was used
+            thermal.consumed = true; // mark for removal
         }
-
-        return true;
-    });
+    }
 
     //
     // FLOCKS
     //
-    flocks = flocks.filter(flock => {
-        const box = {
+    for (const flock of flocks) {
+        if (flock.consumed) continue;
+
+        if (intersects(p, {
             x: flock.x - cameraX,
             y: flock.y,
             width: flock.width,
             height: flock.height
-        };
-
-        if (intersects(p, box)) {
+        })) {
             flockActive = true;
             flockProtectionTimer = 600;
-            return false; // remove flock that was touched
+            flock.consumed = true; // mark for removal
         }
-
-        return true;
-    });
+    }
 
     //
     // HAZARDS
     //
     for (const h of hazards) {
         const sprite = hazardSprites[h.appearance] || hazardSprites.powerline;
-
         const box = {
             x: h.x - cameraX + (h.width - sprite.hitW) / 2,
             y: (h.type === "powerline")
-                ? (canvas.height - 20 - sprite.hitH)
-                : (h.y - sprite.hitH),
+                ? canvas.height - 20 - sprite.hitH
+                : h.y - sprite.hitH,
             width: sprite.hitW,
             height: sprite.hitH
         };
 
         if (!intersects(p, box)) continue;
 
-        // POWERLINES = DEATH
         if (h.type === "powerline") {
             gameState = STATE.GAMEOVER;
             return;
         }
 
-        // STORMS = ENERGY LOSS
         if (h.type === "storm" && !h.hit) {
             player.energy -= h.damage;
             h.hit = true;
-            if (player.energy < 0) {
-                player.energy = 0;
-            }
+            if (player.energy < 0) player.energy = 0;
         }
     }
+
+    // Optional: clean up consumed objects
+    foods = foods.filter(f => !f.consumed);
+    thermals = thermals.filter(t => !t.consumed);
+    flocks = flocks.filter(f => !f.consumed);
 } // end of updateCollisions
+
 //
 // MILESTONES
 //
