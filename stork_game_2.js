@@ -166,7 +166,7 @@ const hazardSprites = {
     powerline: { img: powerlineImg, w: 90, h: 120, hitW: 80, hitH: 110 },
     car:       { img: carImg,       w: 90, h: 120,  hitW: 80, hitH: 110 },
     sand:      { img: sandImg,      w: 90, h: 120,  hitW: 80, hitH: 110 },
-    tree:    { img: treeImg,        w: 90, h: 120, hitW: 80, hitH: 110 }
+    tree:    { img: treeImg,        w: 90, h: 100, hitW: 80, hitH: 90 }
 };
     
 //
