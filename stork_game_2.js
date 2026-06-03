@@ -717,7 +717,31 @@ function updateCollisions() {
 
         return true;
     });
-
+    
+    //
+    // FLOCKS
+    //
+    
+    flocks = flocks.filter(flock => {
+    
+        const box = {
+            x: flock.x - cameraX,
+            y: flock.y,
+            width: flock.width,
+            height: flock.height
+        };
+    
+        if (intersects(playerBox(), box)) {
+    
+            flockActive = true;
+            flockProtectionTimer = 600;
+    
+            return false;
+        }
+    
+        return true;
+    });
+    
     //
     // HAZARDS
     //
@@ -749,29 +773,6 @@ function updateCollisions() {
             gameState = STATE.GAMEOVER;
             return;
         }
-
-        //
-        // FLOCKS
-        //
-
-        flocks = flocks.filter(flock => {
-    
-            const box = {
-        
-                x: flock.x - cameraX,
-                y: flock.y,
-        
-                width: flock.width,
-                height: flock.height
-            };
-        
-            if (intersects(playerBox(), box)) {
-        
-                flockActive = true;
-                flockProtectionTimer = 600;
-        
-                return false;
-            }
         
             return true;
     });
@@ -1441,7 +1442,8 @@ function draw() {
     drawFoods();
     drawThermals();
     drawHazards();
-    
+
+    drawFlocks();
     drawEscortFlock();
     
     drawPlayer();
