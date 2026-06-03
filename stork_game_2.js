@@ -1365,16 +1365,24 @@ function drawVictory() {
 
     const outcome = getOutcome(distance);
 
-    ctx.fillStyle = "rgba(0,0,0,0.65)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //ctx.fillStyle = "rgba(0,0,0,0.65)";
+    //ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Victory image
     ctx.drawImage(
         victoryStorkImg,
-        canvas.width / 2 - 80,
-        20,
-        160,
-        160
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+    // Dark overlay for readability
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
     );
 
     ctx.fillStyle = "#FFF";
