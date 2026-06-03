@@ -458,19 +458,17 @@ function spawnPowerline() {
 
 function spawnStorm() {
 
+    if (currentBiome() === "desert") {
+        return;
+    }
+
     hazards.push({
-
         type: "storm",
-
         x: cameraX + canvas.width + 100,
-
         y: 20 + Math.random() * 90,
-
         width: 90,
         height: 60,
-
         damage: 25,
-
         hit: false
     });
 }
@@ -510,13 +508,22 @@ function updateSpawning() {
     }
 
     if (hazardTimer > hazardInterval / difficulty) {
-
-        if (Math.random() < 0.55) {
+    
+        if (biome === "desert") {
+    
+            // Desert only spawns sand hazards
             spawnPowerline();
+    
         } else {
-            spawnStorm();
+    
+            if (Math.random() < 0.55) {
+                spawnPowerline();
+            } else {
+                spawnStorm();
+            }
+    
         }
-
+    
         hazardTimer = 0;
     }
 
