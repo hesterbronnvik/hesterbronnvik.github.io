@@ -35,6 +35,9 @@ carImg.src = "images/tree8bit.png";
 const sandImg = new Image();
 sandImg.src = "images/sand8bit.png";
 
+const victoryStorkImg = new Image();
+victoryStorkImg.src = "images/stork_victory.png";
+
 //
 // BACKGROUNDS
 //
@@ -1365,29 +1368,50 @@ function drawVictory() {
     ctx.fillStyle = "rgba(0,0,0,0.65)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Victory image
+    ctx.drawImage(
+        victoryStorkImg,
+        canvas.width / 2 - 80,
+        20,
+        160,
+        160
+    );
+
     ctx.fillStyle = "#FFF";
 
     ctx.font = "34px Arial";
-    ctx.fillText(outcome.title, 250, 90);
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        outcome.title,
+        canvas.width / 2,
+        210
+    );
 
     ctx.font = "20px Arial";
 
     const km = Math.floor(distance);
     const region = getRegion(distance);
 
-    ctx.fillText(`${km} km — ${region}`, 200, 130);
+    ctx.fillText(
+        `${km} km — ${region}`,
+        canvas.width / 2,
+        245
+    );
 
     ctx.fillText(
         outcome.text,
-        200,
-        170
+        canvas.width / 2,
+        280
     );
 
     ctx.fillText(
         "Press ENTER to migrate again",
-        200,
-        220
+        canvas.width / 2,
+        330
     );
+
+    ctx.textAlign = "left";
 }
 
 //
