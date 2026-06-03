@@ -210,23 +210,36 @@ function flap() {
 
 document.addEventListener("keydown", e => {
 
-    if (e.code !== "Space" && e.code !== "ArrowUp") return;
+    //
+    // ENTER = start or restart
+    //
+    if (e.code === "Enter") {
 
-    e.preventDefault();
+        e.preventDefault();
 
-    // START / RESTART ONLY
-    if (gameState === STATE.START) {
-        gameState = STATE.PLAYING;
-        return;
+        if (gameState === STATE.START) {
+            gameState = STATE.PLAYING;
+            return;
+        }
+
+        if (
+            gameState === STATE.GAMEOVER ||
+            gameState === STATE.VICTORY
+        ) {
+            restart();
+            return;
+        }
     }
 
-    if (gameState === STATE.GAMEOVER || gameState === STATE.VICTORY) {
-        restart();
-        return;
-    }
+    //
+    // SPACE / UP = flap
+    //
+    if (
+        (e.code === "Space" || e.code === "ArrowUp") &&
+        gameState === STATE.PLAYING
+    ) {
 
-    // FLAP ONLY DURING GAMEPLAY
-    if (gameState === STATE.PLAYING) {
+        e.preventDefault();
         flap();
     }
 });
@@ -1186,7 +1199,7 @@ function drawStartScreen() {
 
     ctx.fillStyle = "#000";
 
-    ctx.font = "28px Arial";
+    ctx.font = "24px Arial";
     ctx.fillText(
         "Time to migrate.",
         230,
@@ -1196,9 +1209,15 @@ function drawStartScreen() {
     ctx.font = "18px Arial";
 
     ctx.fillText(
-        "Press SPACE or UP to begin.",
+        "Press SPACE or UP to soar.",
         230,
         230
+    );
+    
+    ctx.fillText(
+        "Press ENTER to begin.",
+        230,
+        265
     );
 
     ctx.fillText(
@@ -1246,7 +1265,7 @@ function drawGameOver() {
     );
 
     ctx.fillText(
-        "Press SPACE to migrate again",
+        "Press ENTER to migrate again",
         240,
         220
     );
@@ -1278,7 +1297,7 @@ function drawVictory() {
     );
 
     ctx.fillText(
-        "Press SPACE to migrate again",
+        "Press ENTER to migrate again",
         240,
         220
     );
