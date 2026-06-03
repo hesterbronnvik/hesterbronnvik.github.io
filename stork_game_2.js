@@ -1249,7 +1249,7 @@ function drawGameOver() {
     ctx.fillStyle = "#FFF";
 
     ctx.font = "34px Arial";
-    ctx.fillText(outcome.title, 220, 90);
+    ctx.fillText(outcome.title, 200, 90);
 
     ctx.font = "20px Arial";
     
@@ -1266,7 +1266,7 @@ function drawGameOver() {
 
     ctx.fillText(
         "Press ENTER to migrate again",
-        240,
+        200,
         220
     );
 }
@@ -1288,17 +1288,17 @@ function drawVictory() {
     const km = Math.floor(distance);
     const region = getRegion(distance);
 
-    ctx.fillText(`${km} km — ${region}`, 220, 130);
+    ctx.fillText(`${km} km — ${region}`, 200, 130);
 
     ctx.fillText(
         outcome.text,
-        140,
+        200,
         170
     );
 
     ctx.fillText(
         "Press ENTER to migrate again",
-        240,
+        200,
         220
     );
 }
