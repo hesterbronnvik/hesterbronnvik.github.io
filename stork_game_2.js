@@ -35,7 +35,7 @@ carImg.src = "images/tree8bit.png";
 const sandImg = new Image();
 sandImg.src = "images/sand8bit.png";
 
-const hunterImg = new Image();
+const treeImg = new Image();
 treeImg.src = "images/atree8bit.png";
     
 const victoryStorkImg = new Image();
