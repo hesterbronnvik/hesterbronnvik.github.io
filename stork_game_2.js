@@ -27,7 +27,7 @@ const insectImg = new Image();
 insectImg.src = "images/insect8bit.png";
 
 const thermalImg = new Image();
-thermalImg.src = "images/thermal8bit2.png";
+thermalImg.src = "images/thermal8bit_2.png";
 
 const carImg = new Image();
 carImg.src = "images/tree8bit.png";
