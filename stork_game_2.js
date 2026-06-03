@@ -354,8 +354,8 @@ function restart() {
     distance = 0;
     difficulty = 1;
 
-    biomeIndex = 0;
-    biomeProgress = 0;
+    //biomeIndex = 0;
+    //biomeProgress = 0;
 
     hazards = [];
     foods = [];
@@ -964,11 +964,12 @@ function update() {
     //
     // WIN CONDITION
     //
-
-    //if (distance >= WIN_DISTANCE) {
-
-    //    gameState = STATE.VICTORY;
-    //}
+    
+    if (distance >= WIN_DISTANCE) {
+    
+        gameState = STATE.VICTORY;
+        return;
+    }
 }
 
     //---------------
