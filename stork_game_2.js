@@ -37,7 +37,10 @@ sandImg.src = "images/sand8bit.png";
 
 const treeImg = new Image();
 treeImg.src = "images/atree8bit.png";
-    
+
+const startImg = new Image();
+startImg.src = "images/startscreen.png";
+
 const victoryStorkImg = new Image();
 victoryStorkImg.src = "images/stork_victory.png";
 
@@ -63,6 +66,7 @@ bg.desert.src = "images/bg_desert_3.png";
 
 const STATE = {
     START: "start",
+    RULES: "rules",
     PLAYING: "playing",
     GAMEOVER: "gameover",
     VICTORY: "victory"
@@ -228,8 +232,13 @@ document.addEventListener("keydown", e => {
     if (e.code === "Enter") {
 
         e.preventDefault();
-
+        
         if (gameState === STATE.START) {
+            gameState = STATE.RULES;
+            return;
+        }
+        
+        if (gameState === STATE.RULES) {
             gameState = STATE.PLAYING;
             return;
         }
@@ -310,6 +319,84 @@ function getRegion(km) {
     return "Impressive!";
 }
 
+//
+// START MESSAGES
+//
+    function drawRulesScreen() {
+
+    ctx.fillStyle = "rgba(255,255,255,0.85)";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle = "#000";
+    ctx.textAlign = "center";
+
+    ctx.font = "28px Arial";
+    ctx.fillText(
+        "How to play:",
+        canvas.width / 2,
+        60
+    );
+
+    ctx.font = "18px Arial";
+
+    ctx.fillText(
+        "Press SPACE or UP ARROW to soar",
+        canvas.width / 2,
+        110
+    );
+
+    ctx.fillText(
+        "Food restores energy",
+        canvas.width / 2,
+        150
+    );
+
+    ctx.fillText(
+        "Thermals restore energy",
+        canvas.width / 2,
+        180
+    );
+
+    ctx.fillText(
+        "Storm clouds drain energy",
+        canvas.width / 2,
+        210
+    );
+
+    ctx.fillText(
+        "Pylons, trees, and sand storms are fatal",
+        canvas.width / 2,
+        240
+    );
+
+    ctx.fillText(
+        "Join a flock for temporary collision immunity",
+        canvas.width / 2,
+        270
+    );
+
+    ctx.fillText(
+        "Reach 4500 km to reach the wintering grounds",
+        canvas.width / 2,
+        320
+    );
+
+    ctx.font = "20px Arial";
+
+    ctx.fillText(
+        "Press ENTER to begin migration",
+        canvas.width / 2,
+        390
+    );
+
+    ctx.textAlign = "left";
+}
+    
 //
 // END MESSAGES
 //
@@ -1279,9 +1366,17 @@ function drawWeatherEffects() {
 
 function drawStartScreen() {
 
-    ctx.fillStyle =
-        "rgba(255,255,255,0.7)";
+    // Full-screen image
+    ctx.drawImage(
+        startImg,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
+    // Darken image for readability
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
     ctx.fillRect(
         0,
         0,
@@ -1289,52 +1384,56 @@ function drawStartScreen() {
         canvas.height
     );
 
-    ctx.fillStyle = "#000";
+    const bob = Math.sin(Date.now() * 0.002) * 5;
+    const flyX = (Date.now() * 0.05) % (canvas.width + 100);
 
-    ctx.font = "24px Arial";
+    ctx.drawImage(
+        storkImg,
+        flyX - 50,
+        80,
+        40,
+        40
+    );
+    
+    ctx.fillStyle = "#FFF";
+    ctx.textAlign = "center";
+
+    ctx.font = "42px Arial";
     ctx.fillText(
         "Time to migrate.",
-        200,
-        90
+        canvas.width / 2,
+        120 + bob
     );
 
-    ctx.font = "18px Arial";
-    
-    ctx.fillText(
-        "Can you travel 4500 km to the ancestral wintering grounds?",
-        230,
-        130
-    );
+    ctx.font = "22px Arial";
 
     ctx.fillText(
-        "Food and thermals restore energy.",
-        230,
-        165
+        "Can you travel",
+        canvas.width / 2,
+        190
     );
 
     ctx.fillText(
-        "Storms drain energy. Pylons are deadly.",
-        230,
-        200
+        "4,500 km from Europe",
+        canvas.width / 2,
+        225
     );
 
     ctx.fillText(
-        "Find a flock for safety from collisions.",
-        230,
-        235
+        "to the African wintering grounds?",
+        canvas.width / 2,
+        260
     );
-    
+
+    ctx.font = "28px Arial";
+
     ctx.fillText(
-        "Press SPACE or UP to soar.",
-        230,
-        270
+        "Press ENTER to begin",
+        canvas.width / 2,
+        360
     );
-    
-    ctx.fillText(
-        "Press ENTER to begin.",
-        230,
-        305
-    );
+
+    ctx.textAlign = "left";
 }
 
 function drawGameOver() {
@@ -1485,6 +1584,10 @@ function draw() {
         drawStartScreen();
     }
 
+    if (gameState === STATE.RULES) {
+        drawRulesScreen();
+    }
+    
     if (gameState === STATE.GAMEOVER) {
         drawGameOver();
     }
