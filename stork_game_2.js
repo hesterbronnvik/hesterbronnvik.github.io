@@ -1283,22 +1283,16 @@ function drawStartScreen() {
     ctx.font = "24px Arial";
     ctx.fillText(
         "Time to migrate.",
-        230,
+        200,
         90
     );
 
     ctx.font = "18px Arial";
-
-    ctx.fillText(
-        "Press SPACE or UP to soar.",
-        230,
-        230
-    );
     
     ctx.fillText(
-        "Press ENTER to begin.",
+        "Can you travel 4500 km to the ancestral wintering grounds?",
         230,
-        265
+        130
     );
 
     ctx.fillText(
@@ -1314,9 +1308,21 @@ function drawStartScreen() {
     );
 
     ctx.fillText(
-        "Can you travel 4500 km to the ancestral wintering grounds?",
+        "Find a flock for safety from collisions.",
         230,
-        130
+        235
+    );
+    
+    ctx.fillText(
+        "Press SPACE or UP to soar.",
+        230,
+        270
+    );
+    
+    ctx.fillText(
+        "Press ENTER to begin.",
+        230,
+        305
     );
 }
 
