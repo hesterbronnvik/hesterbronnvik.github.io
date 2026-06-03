@@ -731,7 +731,7 @@ function updateCollisions() {
 
         if (!intersects(p, box)) continue;
 
-        if (h.type === "powerline") {
+        if (h.type === "powerline" && !flockActive) {
             gameState = STATE.GAMEOVER;
             return;
         }
