@@ -325,7 +325,7 @@ function getOutcome(distance) {
         return {
             type: "PARTIAL_SUCCESS",
             title: "Partial success",
-            text: "You can overwinter here, but you have to compete and may get poisoned."
+            text: "You can overwinter here, but you have to compete."
         };
     }
 
