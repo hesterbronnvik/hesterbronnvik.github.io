@@ -303,7 +303,7 @@ function getRegion(km) {
     if (km < 4400) return "North Africa";
     if (km < 4500) return "The Sahel";
 
-    return "African Wintering Grounds";
+    return "Impressive!";
 }
 
 //
@@ -1393,7 +1393,7 @@ function drawVictory() {
     ctx.fillText(
         outcome.title,
         canvas.width / 2,
-        210
+        90
     );
 
     ctx.font = "20px Arial";
@@ -1404,19 +1404,19 @@ function drawVictory() {
     ctx.fillText(
         `${km} km — ${region}`,
         canvas.width / 2,
-        245
+        210
     );
 
     ctx.fillText(
         outcome.text,
         canvas.width / 2,
-        280
+        245
     );
 
     ctx.fillText(
         "Press ENTER to migrate again",
         canvas.width / 2,
-        330
+        290
     );
 
     ctx.textAlign = "left";
