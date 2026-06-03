@@ -657,7 +657,6 @@ function playerBox() {
 //
 // COLLISIONS
 //
-
 function updateCollisions() {
 
     const p = playerBox();
@@ -665,27 +664,20 @@ function updateCollisions() {
     //
     // FOOD
     //
-
     foods = foods.filter(food => {
-
         const box = {
-
             x: food.x - cameraX,
             y: food.y,
-
             width: food.width,
             height: food.height
         };
 
         if (intersects(p, box)) {
-
             player.energy += food.energy;
-
             if (player.energy > player.maxEnergy) {
                 player.energy = player.maxEnergy;
             }
-
-            return false;
+            return false; // remove food that was eaten
         }
 
         return true;
@@ -694,115 +686,79 @@ function updateCollisions() {
     //
     // THERMALS
     //
-
     thermals = thermals.filter(thermal => {
-
         const box = {
-
             x: thermal.x - cameraX,
             y: thermal.y,
-
             width: thermal.width,
             height: thermal.height
         };
 
         if (intersects(p, box)) {
-        
             player.energy += thermal.energy;
-        
             if (player.energy > player.maxEnergy) {
                 player.energy = player.maxEnergy;
             }
-        
             thermalBoostTimer = 180;
-        
-            return false;
+            return false; // remove thermal that was used
         }
 
         return true;
     });
-    
+
     //
     // FLOCKS
     //
-    
     flocks = flocks.filter(flock => {
-    
         const box = {
             x: flock.x - cameraX,
             y: flock.y,
             width: flock.width,
             height: flock.height
         };
-    
-        if (intersects(playerBox(), box)) {
-    
+
+        if (intersects(p, box)) {
             flockActive = true;
             flockProtectionTimer = 600;
-    
-            return false;
+            return false; // remove flock that was touched
         }
-    
+
         return true;
     });
-    
+
     //
     // HAZARDS
     //
-    
     for (const h of hazards) {
-    
         const sprite = hazardSprites[h.appearance] || hazardSprites.powerline;
-    
+
         const box = {
-    
             x: h.x - cameraX + (h.width - sprite.hitW) / 2,
-    
             y: (h.type === "powerline")
                 ? (canvas.height - 20 - sprite.hitH)
                 : (h.y - sprite.hitH),
-    
             width: sprite.hitW,
             height: sprite.hitH
         };
-    
+
         if (!intersects(p, box)) continue;
-    
+
+        // POWERLINES = DEATH
         if (h.type === "powerline") {
-    
             gameState = STATE.GAMEOVER;
             return;
         }
-    
-        if (h.type === "storm" && !h.hit) {
-    
-            player.energy -= h.damage;
-    
-            h.hit = true;
-    
-            if (player.energy < 0) {
-                player.energy = 0;
-            }
-        }
-    }
-        
-        //
+
         // STORMS = ENERGY LOSS
-        //
-
         if (h.type === "storm" && !h.hit) {
-
             player.energy -= h.damage;
-
             h.hit = true;
-
             if (player.energy < 0) {
                 player.energy = 0;
             }
         }
     }
-}
-
+} // end of updateCollisions
 //
 // MILESTONES
 //
