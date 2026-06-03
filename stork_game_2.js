@@ -1402,7 +1402,7 @@ function drawStartScreen() {
     ctx.fillText(
         "Time to migrate.",
         canvas.width / 2,
-        120 + bob
+        90 + bob
     );
 
     ctx.font = "22px Arial";
@@ -1410,13 +1410,13 @@ function drawStartScreen() {
     ctx.fillText(
         "Can you travel",
         canvas.width / 2,
-        190
+        120
     );
 
     ctx.fillText(
         "to the ancestral wintering grounds?",
         canvas.width / 2,
-        225
+        150
     );
 
     ctx.font = "28px Arial";
